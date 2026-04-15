@@ -10,7 +10,9 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function __construct(private ProductService $productService) {}
+    public function __construct(private ProductService $productService)
+    {
+    }
 
     public function index(Request $request)
     {
@@ -18,7 +20,7 @@ class ProductController extends Controller
 
         // Filter by category
         if ($request->filled('danh_muc')) {
-            $query->whereHas('category', fn ($q) => $q->where('slug', $request->danh_muc));
+            $query->whereHas('category', fn($q) => $q->where('slug', $request->danh_muc));
         }
 
         // Search
@@ -26,18 +28,18 @@ class ProductController extends Controller
             $search = $request->tim_kiem;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('short_description', 'like', "%{$search}%");
+                    ->orWhere('short_description', 'like', "%{$search}%");
             });
         }
 
         // Sort
         match ($request->sap_xep) {
-            'gia_tang'   => $query->orderBy('price', 'asc'),
-            'gia_giam'   => $query->orderBy('price', 'desc'),
-            default      => $query->latest(),
+            'gia_tang' => $query->orderBy('price', 'asc'),
+            'gia_giam' => $query->orderBy('price', 'desc'),
+            default => $query->latest(),
         };
 
-        $products   = $query->paginate(12)->withQueryString();
+        $products = $query->paginate(12)->withQueryString();
         $categories = Category::withCount('products')->orderBy('name')->get();
 
         return view('public.products.index', compact('products', 'categories'));

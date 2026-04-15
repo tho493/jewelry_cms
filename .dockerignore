@@ -1,0 +1,51 @@
+# ── Composer & Node dependencies (rebuilt in Docker) ─────
+vendor/
+node_modules/
+
+# ── Local storage & logs ──────────────────────────────────
+storage/app/public/
+storage/logs/
+storage/framework/cache/
+storage/framework/sessions/
+storage/framework/views/
+
+# ── Bootstrap cache (dev-generated, rebuilt in container) ─
+bootstrap/cache/
+
+# ── Vite build output (built inside Docker) ───────────────
+public/build/
+public/hot/
+public/storage/
+
+# ── Tests & dev tools ────────────────────────────────────
+tests/
+.phpunit.cache/
+.phpunit.result.cache
+
+# ── Git ───────────────────────────────────────────────────
+.git/
+.gitignore
+.gitattributes
+
+# ── IDE / OS ─────────────────────────────────────────────
+.idea/
+.vscode/
+.cursor/
+.DS_Store
+Thumbs.db
+
+# ── Docker support files ──────────────────────────────────
+# Giữ docker/entrypoint.sh (cần COPY vào image)
+# Exclude những file chỉ dùng trên host
+docker/nginx/
+docker/mysql/
+docker/README.md
+docker-compose*.yml
+
+# ── Env files ────────────────────────────────────────────
+.env
+.env.*
+
+# ── Docs ─────────────────────────────────────────────────
+docs/
+README.md

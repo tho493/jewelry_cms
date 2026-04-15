@@ -62,19 +62,19 @@ RUN apk add --no-cache \
 
 # ── PHP extensions ────────────────────────────────────────────
 RUN docker-php-ext-configure gd \
-        --with-freetype \
-        --with-jpeg \
-        --with-webp \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp \
     && docker-php-ext-install -j$(nproc) \
-        pdo_mysql \
-        mbstring \
-        exif \
-        pcntl \
-        bcmath \
-        gd \
-        intl \
-        xml \
-        opcache
+    pdo_mysql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd \
+    intl \
+    xml \
+    opcache
 
 # ── PHP-FPM & OPcache config ──────────────────────────────────
 RUN { \
@@ -85,14 +85,14 @@ RUN { \
     echo 'opcache.validate_timestamps=0'; \
     echo 'opcache.revalidate_freq=0'; \
     echo 'opcache.fast_shutdown=1'; \
-} > /usr/local/etc/php/conf.d/opcache.ini
+    } > /usr/local/etc/php/conf.d/opcache.ini
 
 RUN { \
     echo 'upload_max_filesize=128M'; \
     echo 'post_max_size=132M'; \
     echo 'memory_limit=256M'; \
     echo 'max_execution_time=120'; \
-} > /usr/local/etc/php/conf.d/custom.ini
+    } > /usr/local/etc/php/conf.d/custom.ini
 
 # ── Create non-root user ──────────────────────────────────────
 RUN addgroup -g 1000 laravel && adduser -u 1000 -G laravel -s /bin/bash -D laravel
@@ -105,14 +105,16 @@ COPY --from=node-builder     --chown=laravel:laravel /app/public/build ./public/
 
 # ── Storage / bootstrap cache dirs ───────────────────────────
 RUN mkdir -p \
-        storage/app/public \
-        storage/framework/cache \
-        storage/framework/sessions \
-        storage/framework/views \
-        storage/logs \
-        bootstrap/cache \
+    storage/app/public \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache \
     && chown -R laravel:laravel storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
+
+RUN mkdir -p /var/www/html/public/build
 
 # ── Backup Vite build (survives shared volume mount overrides) ────
 RUN cp -r public/build /build_source

@@ -140,6 +140,8 @@ volumes:
     driver: local
   app_logs:
     driver: local
+  app_code:
+    driver: local
 
 # ── Networks ─────────────────────────────────────────────────
 networks:

@@ -14,9 +14,9 @@ services:
 
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_DATABASE: jewelry_cms
+      DB_DATABASE: "${DB_DATABASE:-jewelry_cms}"
       DB_USERNAME: root
-      DB_PASSWORD: ${DB_ROOT_PASSWORD}
+      DB_PASSWORD: "${DB_ROOT_PASSWORD:-secret_root}"
       TINY_CLOUD_KEY: "${TINY_CLOUD_KEY}"
 
     volumes:
@@ -54,25 +54,23 @@ services:
     image: mysql:8.0
     container_name: jewelry_mysql
     restart: unless-stopped
-
     environment:
-      MYSQL_DATABASE: jewelry_cms
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-
+      MYSQL_DATABASE: "${DB_DATABASE:-jewelry_cms}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-secret_root}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
     volumes:
       - mysql_data:/var/lib/mysql
-
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
     ports:
-      - "33306:3306"
-
+      - "${MYSQL_PORT:-33306}:3306"
     networks:
       - jewelry_net
-
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-secret_root}"]
       interval: 10s
+      timeout: 5s
       retries: 10
-
+      start_period: 30s
 
 volumes:
   mysql_data:

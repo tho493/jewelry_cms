@@ -19,6 +19,7 @@ services:
       SESSION_DRIVER: database
       CACHE_STORE: database
       FILESYSTEM_DISK: public
+      TINY_CLOUD_KEY: "${TINY_CLOUD_KEY}"
     volumes:
       - app_storage:/var/www/html/storage/app/public
       - app_logs:/var/www/html/storage/logs

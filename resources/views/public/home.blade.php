@@ -8,71 +8,166 @@
         /* ── Hero ────────────────────────────────────── */
         .hero {
             position: relative;
-            min-height: 90vh;
+            min-height: 100vh;
+            /* Tăng chiều cao để phủ kín màn hình ban đầu */
             display: flex;
             align-items: center;
-            background: radial-gradient(ellipse at 60% 50%, rgba(201, 168, 76, 0.08) 0%, transparent 60%),
-                linear-gradient(135deg, #0d0d0d 0%, #1a1410 100%);
+            background: #0a0a0a;
             overflow: hidden;
+            color: #fff;
         }
 
+        /* Hiệu ứng ánh sáng nền di chuyển */
         .hero::before {
             content: '';
             position: absolute;
-            inset: 0;
-            background-image: radial-gradient(circle at 1px 1px, rgba(201, 168, 76, 0.07) 1px, transparent 0);
-            background-size: 40px 40px;
+            top: -10%;
+            right: -10%;
+            width: 60%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(201, 168, 76, 0.15) 0%, transparent 70%);
+            filter: blur(80px);
+            animation: floatLight 10s infinite alternate;
+            z-index: 0;
+        }
+
+        @keyframes floatLight {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(-10%, 10%);
+            }
+        }
+
+        /* Layout chia đôi: Text và Hình ảnh */
+        .hero-wrapper {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 40px;
+            position: relative;
+            z-index: 2;
         }
 
         .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 600px;
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: fadeInUp 1s forwards 0.5s;
         }
 
+        /* Chữ cái đầu tiên lớn (Drop Cap) hoặc Line trang trí */
         .hero-label {
-            font-size: 11px;
+            font-size: 13px;
             color: var(--gold);
             text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 20px;
+            letter-spacing: 5px;
+            margin-bottom: 30px;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .hero-label::before {
-            content: '';
-            width: 32px;
-            height: 1px;
-            background: var(--gold);
+            gap: 15px;
         }
 
         .hero-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 62px;
-            font-weight: 600;
-            line-height: 1.1;
-            margin-bottom: 20px;
+            font-size: clamp(48px, 8vw, 84px);
+            /* Responsive font size */
+            font-weight: 500;
+            line-height: 1;
+            margin-bottom: 25px;
+            letter-spacing: -1px;
         }
 
-        .hero-title em {
+        .hero-title span {
+            display: block;
             font-style: italic;
             color: var(--gold);
+            margin-left: 60px;
+            /* Tạo độ lệch nghệ thuật */
+            position: relative;
         }
 
-        .hero-desc {
-            color: var(--muted);
-            font-size: 16px;
-            line-height: 1.8;
-            margin-bottom: 36px;
-            max-width: 480px;
-        }
-
-        .hero-actions {
+        /* Hiệu ứng trang trí cho hình ảnh bên phải */
+        .hero-visual {
+            position: relative;
             display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-img-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 4/5;
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            padding: 15px;
+            animation: morphFrame 15s infinite ease-in-out;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.1) brightness(0.9);
+        }
+
+        /* Nút bấm sang chảnh hơn */
+        .btn-gold {
+            background: var(--gold);
+            color: #000;
+            padding: 16px 35px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-gold:hover {
+            background: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(201, 168, 76, 0.2);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive cho Mobile */
+        @media (max-width: 991px) {
+            .hero-wrapper {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-label {
+                justify-content: center;
+            }
+
+            .hero-title span {
+                margin-left: 0;
+            }
+
+            .hero-desc {
+                margin: 0 auto 30px;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
         }
 
         /* ── Category chips ─────────────────────────── */
@@ -114,22 +209,46 @@
     <!-- Hero -->
     <section class="hero">
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-label">Bộ sưu tập mới 2026</div>
-                <h1 class="hero-title">
-                    Trang sức<br>
-                    <em>Cao Cấp</em><br>
-                    Việt Nam
-                </h1>
-                <p class="hero-desc">
-                    Mỗi sản phẩm được chế tác thủ công từ vàng 18K, bạch kim và kim cương thiên nhiên — mang vẻ đẹp vượt
-                    thời gian.
-                </p>
-                <div class="hero-actions">
-                    <a href="{{ route('products.index') }}" class="btn btn-gold">Khám phá ngay</a>
-                    <a href="#featured" class="btn btn-outline">Xem bộ sưu tập</a>
+            <div class="hero-wrapper">
+
+                <div class="hero-content">
+                    <div class="hero-label">
+                        <span>Kiệt tác di sản</span>
+                    </div>
+                    <h1 class="hero-title">
+                        Tinh Hoa <br>
+                        <span>Trang Sức</span>
+                    </h1>
+                    <p class="hero-desc">
+                        Tuyển tập những món bảo vật được hồi sinh từ dòng chảy Hán - Việt,
+                        chế tác thủ công với độ tinh xảo tuyệt đối dành riêng cho giới mộ điệu.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="{{ route('products.index') }}" class="btn btn-gold">Khám phá tuyệt tác</a>
+                        <a href="#featured" class="btn btn-outline"
+                            style="color: #fff; border-color: rgba(255,255,255,0.3);">
+                            Xem bộ sưu tập
+                        </a>
+                    </div>
                 </div>
+
+                <div class="hero-visual">
+                    <div class="main-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop"
+                            alt="Luxury Jewelry" class="hero-img">
+
+                        <div
+                            style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; border-left: 2px solid var(--gold); border-bottom: 2px solid var(--gold);">
+                        </div>
+                    </div>
+                </div>
+
             </div>
+        </div>
+
+        <div class="scroll-indicator"
+            style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); opacity: 0.6;">
+            <div style="width: 1px; height: 60px; background: linear-gradient(to bottom, var(--gold), transparent);"></div>
         </div>
     </section>
 
@@ -196,17 +315,17 @@
 
     <!-- About strip -->
     <!-- <section style="background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 56px 0;">
-        <div class="container">
-            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:40px; text-align:center">
-                @foreach([['💎','Chất liệu cao cấp','Vàng 18K, Bạch kim, Kim cương thiên nhiên'], ['✋','Chế tác thủ công','Mỗi sản phẩm đều được chế tác tỉ mỉ bởi nghệ nhân'], ['📦','Giao hàng toàn quốc','Đóng gói sang trọng, giao hàng an toàn'], ['🛡','Bảo hành 12 tháng','Đổi trả miễn phí trong vòng 30 ngày']] as [$icon, $title, $desc])
-                <div>
-                    <div style="font-size:36px;margin-bottom:12px">{{ $icon }}</div>
-                    <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:6px">{{ $title }}</div>
-                    <div style="color:var(--muted);font-size:13px;line-height:1.6">{{ $desc }}</div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-    </section> -->
+                                                <div class="container">
+                                                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:40px; text-align:center">
+                                                        @foreach([['💎','Chất liệu cao cấp','Vàng 18K, Bạch kim, Kim cương thiên nhiên'], ['✋','Chế tác thủ công','Mỗi sản phẩm đều được chế tác tỉ mỉ bởi nghệ nhân'], ['📦','Giao hàng toàn quốc','Đóng gói sang trọng, giao hàng an toàn'], ['🛡','Bảo hành 12 tháng','Đổi trả miễn phí trong vòng 30 ngày']] as [$icon, $title, $desc])
+                                                        <div>
+                                                            <div style="font-size:36px;margin-bottom:12px">{{ $icon }}</div>
+                                                            <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:6px">{{ $title }}</div>
+                                                            <div style="color:var(--muted);font-size:13px;line-height:1.6">{{ $desc }}</div>
+                                                        </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </section> -->
 
 @endsection

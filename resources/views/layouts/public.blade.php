@@ -331,12 +331,269 @@
                 gap: 14px;
             }
         }
+
+        /* ── Splash Screen ────────────────────────── */
+        #splash {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #080808;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            pointer-events: all;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #splash.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .splash-gem {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 32px;
+        }
+
+        .splash-gem svg {
+            width: 80px;
+            height: 80px;
+            animation: gemRotate 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 18px rgba(201, 168, 76, 0.6));
+        }
+
+        @keyframes gemRotate {
+
+            0%,
+            100% {
+                transform: rotateY(0deg) scale(1);
+            }
+
+            25% {
+                transform: rotateY(20deg) scale(1.05);
+            }
+
+            50% {
+                transform: rotateY(0deg) scale(1.02);
+            }
+
+            75% {
+                transform: rotateY(-20deg) scale(1.05);
+            }
+        }
+
+        .splash-rings {
+            position: absolute;
+            inset: -20px;
+        }
+
+        .splash-ring {
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(201, 168, 76, 0.25);
+            border-radius: 50%;
+            animation: ringPulse 2s ease-in-out infinite;
+        }
+
+        .splash-ring:nth-child(2) {
+            inset: -12px;
+            animation-delay: 0.4s;
+            border-color: rgba(201, 168, 76, 0.15);
+        }
+
+        .splash-ring:nth-child(3) {
+            inset: -24px;
+            animation-delay: 0.8s;
+            border-color: rgba(201, 168, 76, 0.08);
+        }
+
+        @keyframes ringPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scale(1.06);
+                opacity: 1;
+            }
+        }
+
+        .splash-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 600;
+            letter-spacing: 6px;
+            color: var(--gold);
+            text-transform: uppercase;
+            animation: logoReveal 1s ease forwards;
+            opacity: 0;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes logoReveal {
+            from {
+                opacity: 0;
+                letter-spacing: 14px;
+                filter: blur(4px);
+            }
+
+            to {
+                opacity: 1;
+                letter-spacing: 6px;
+                filter: blur(0);
+            }
+        }
+
+        .splash-tagline {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(201, 168, 76, 0.5);
+            margin-top: 10px;
+            animation: fadeUp 1s ease forwards;
+            opacity: 0;
+            animation-delay: 0.7s;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .splash-bar {
+            width: 160px;
+            height: 1px;
+            background: rgba(201, 168, 76, 0.15);
+            margin-top: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .splash-bar-fill {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            animation: barSweep 1.6s ease-in-out infinite;
+        }
+
+        @keyframes barSweep {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .splash-particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .splash-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: particleFall linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes particleFall {
+            0% {
+                transform: translateY(-10px) translateX(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            90% {
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translateY(100vh) translateX(20px);
+                opacity: 0;
+            }
+        }
     </style>
 
     @stack('styles')
 </head>
 
 <body>
+
+    <!-- Splash Screen -->
+    <div id="splash">
+        <!-- Particles -->
+        <div class="splash-particles" id="splashParticles"></div>
+
+        <!-- Diamond Icon -->
+        <div class="splash-gem">
+            <div class="splash-rings">
+                <div class="splash-ring"></div>
+                <div class="splash-ring"></div>
+                <div class="splash-ring"></div>
+            </div>
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="gemGrad" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#e8c96a" />
+                        <stop offset="50%" stop-color="#c9a84c" />
+                        <stop offset="100%" stop-color="#8a6f2e" />
+                    </linearGradient>
+                    <linearGradient id="shimmer" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0)" />
+                        <stop offset="50%" stop-color="rgba(255,255,255,0.3)" />
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                    </linearGradient>
+                </defs>
+                <!-- Diamond shape -->
+                <polygon points="50,8 90,38 75,92 25,92 10,38" fill="url(#gemGrad)" stroke="#e8c96a" stroke-width="1" />
+                <!-- Facets -->
+                <polygon points="50,8 90,38 50,42" fill="rgba(255,255,255,0.15)" />
+                <polygon points="50,8 10,38 50,42" fill="rgba(0,0,0,0.2)" />
+                <polygon points="10,38 25,92 50,60" fill="rgba(255,255,255,0.08)" />
+                <polygon points="90,38 75,92 50,60" fill="rgba(0,0,0,0.15)" />
+                <polygon points="25,92 75,92 50,60" fill="rgba(255,255,255,0.05)" />
+                <!-- Top line detail -->
+                <line x1="50" y1="8" x2="50" y2="42" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" />
+                <line x1="10" y1="38" x2="90" y2="38" stroke="rgba(255,255,255,0.2)" stroke-width="0.5" />
+                <!-- Shimmer overlay -->
+                <polygon points="50,8 90,38 75,92 25,92 10,38" fill="url(#shimmer)" opacity="0.5" />
+            </svg>
+        </div>
+
+        <!-- Brand -->
+        <div class="splash-logo">{{ config('app.name') }}</div>
+        <div class="splash-tagline">Bộ sưu tập trang sức &bull; Hán - Việt</div>
+
+        <!-- Loading bar -->
+        <div class="splash-bar">
+            <div class="splash-bar-fill"></div>
+        </div>
+    </div>
 
     <!-- Header -->
     <header class="header">
@@ -385,12 +642,42 @@
             </div>
             <hr class="divider">
             <div class="footer-bottom">
-                <p>© {{ date('Y') }} tho493. Bảo lưu mọi quyền.</p>
+                <p>© 2026 <a href="https://github.com/tho493" style="color: white">tho493</a>. Bảo lưu mọi
+                    quyền.</p>
             </div>
         </div>
     </footer>
 
     @stack('scripts')
+
+    <script>
+        // Generate gold particles
+        (function () {
+            var container = document.getElementById('splashParticles');
+            for (var i = 0; i < 28; i++) {
+                var p = document.createElement('div');
+                p.className = 'splash-particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = (Math.random() * 2 + 1) + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = (Math.random() * 6 + 4) + 's';
+                p.style.animationDelay = (Math.random() * 5) + 's';
+                p.style.opacity = Math.random() * 0.6 + 0.2;
+                container.appendChild(p);
+            }
+        })();
+
+        // Hide splash after page is ready
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                var splash = document.getElementById('splash');
+                splash.classList.add('hidden');
+                setTimeout(function () {
+                    splash.style.display = 'none';
+                }, 850);
+            }, 1200);
+        });
+    </script>
 </body>
 
 </html>

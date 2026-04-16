@@ -8,57 +8,22 @@ services:
     restart: unless-stopped
 
     environment:
-      APP_ENV: "${APP_ENV:-production}"
-      APP_DEBUG: "${APP_DEBUG:-false}"
-      APP_KEY: "${APP_KEY}"
-      APP_URL: "${APP_URL:-http://localhost}"
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY}
 
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_DATABASE: "${DB_DATABASE:-jewelry_cms}"
-      DB_USERNAME: "root"
-      DB_PASSWORD: "${DB_ROOT_PASSWORD:-secret_root}"
-
-      QUEUE_CONNECTION: database
-      SESSION_DRIVER: database
-      CACHE_STORE: database
-
-      FILESYSTEM_DISK: public
+      DB_DATABASE: jewelry_cms
+      DB_USERNAME: root
+      DB_PASSWORD: ${DB_ROOT_PASSWORD}
+      TINY_CLOUD_KEY: "${TINY_CLOUD_KEY}"
 
     volumes:
       - app_storage:/var/www/html/storage
 
     depends_on:
       mysql:
-        condition: service_healthy
-
-    networks:
-      - jewelry_net
-
-
-  queue:
-    image: tho493/jewelry-cms:latest
-    container_name: jewelry_queue
-    restart: unless-stopped
-
-    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3"]
-
-    environment:
-      APP_ENV: "${APP_ENV:-production}"
-      APP_KEY: "${APP_KEY}"
-
-      DB_HOST: mysql
-      DB_DATABASE: "${DB_DATABASE:-jewelry_cms}"
-      DB_USERNAME: "root"
-      DB_PASSWORD: "${DB_ROOT_PASSWORD:-secret_root}"
-
-    volumes:
-      - app_storage:/var/www/html/storage
-
-    depends_on:
-      mysql:
-        condition: service_healthy
-      app:
         condition: service_healthy
 
     networks:
@@ -66,17 +31,16 @@ services:
 
 
   nginx:
-    image: tho493/jewelry-cms:latest   # 🔥 dùng chung image với app
+    build:
+      context: ./
+      dockerfile: Dockerfile.nginx
     container_name: jewelry_nginx
     restart: unless-stopped
 
-    command: ["nginx", "-g", "daemon off;"]
-
     ports:
-      - "${NGINX_PORT:-8100}:80"
+      - "8100:80"
 
     volumes:
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - app_storage:/var/www/html/storage:ro
 
     depends_on:
@@ -92,25 +56,22 @@ services:
     restart: unless-stopped
 
     environment:
-      MYSQL_DATABASE: "${DB_DATABASE:-jewelry_cms}"
-      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-secret_root}"
+      MYSQL_DATABASE: jewelry_cms
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
 
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
 
     ports:
-      - "${MYSQL_PORT:-33306}:3306"
+      - "33306:3306"
 
     networks:
       - jewelry_net
 
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-secret_root}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD}"]
       interval: 10s
-      timeout: 5s
       retries: 10
-      start_period: 30s
 
 
 volumes:
@@ -119,4 +80,3 @@ volumes:
 
 networks:
   jewelry_net:
-    driver: bridge

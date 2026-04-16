@@ -41,6 +41,7 @@ docker/nginx/
 docker/mysql/
 docker/README.md
 docker-compose*.yml
+!docker/nginx/default.conf
 
 # ── Env files ────────────────────────────────────────────
 .env

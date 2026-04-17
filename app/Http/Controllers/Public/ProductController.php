@@ -23,12 +23,22 @@ class ProductController extends Controller
             $query->whereHas('category', fn($q) => $q->where('slug', $request->danh_muc));
         }
 
-        // Search
+        // Material Filter
+        if ($request->filled('chat_lieu')) {
+            $query->where('material', $request->chat_lieu);
+        }
+
+        // Deep Search (Full Metadata)
         if ($request->filled('tim_kiem')) {
             $search = $request->tim_kiem;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('short_description', 'like', "%{$search}%");
+                    ->orWhere('name_hantu', 'like', "%{$search}%")
+                    ->orWhere('main_character', 'like', "%{$search}%")
+                    ->orWhere('material', 'like', "%{$search}%")
+                    ->orWhere('short_description', 'like', "%{$search}%")
+                    ->orWhere('form_characteristics', 'like', "%{$search}%")
+                    ->orWhere('cultural_meaning', 'like', "%{$search}%");
             });
         }
 
@@ -41,8 +51,15 @@ class ProductController extends Controller
 
         $products = $query->paginate(12)->withQueryString();
         $categories = Category::withCount('products')->orderBy('name')->get();
+        
+        // Lấy danh sách chất liệu duy nhất từ DB
+        $materials = Product::published()
+            ->whereNotNull('material')
+            ->where('material', '!=', '')
+            ->distinct()
+            ->pluck('material');
 
-        return view('public.products.index', compact('products', 'categories'));
+        return view('public.products.index', compact('products', 'categories', 'materials'));
     }
 
     public function show(string $slug)

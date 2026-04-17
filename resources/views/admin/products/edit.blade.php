@@ -143,16 +143,15 @@
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
                             <div class="form-group" style="margin-bottom:0">
                                 <label class="form-label">Tên (Tiếng Việt) <span class="req">*</span></label>
-                                <input type="text" name="name" class="form-control" value="{{ old('name', $product->name) }}"
-                                    required>
+                                <input type="text" name="name" class="form-control"
+                                    value="{{ old('name', $product->name) }}" required>
                                 @error('name')<div class="form-error">{{ $message }}</div>@enderror
                             </div>
-        
+
                             <div class="form-group" style="margin-bottom:0">
                                 <label class="form-label">Tên (Chữ Hán)</label>
                                 <input type="text" name="name_hantu" class="form-control"
-                                       value="{{ old('name_hantu', $product->name_hantu) }}"
-                                       placeholder="Ví dụ: 祥">
+                                    value="{{ old('name_hantu', $product->name_hantu) }}" placeholder="Ví dụ: 祥">
                                 @error('name_hantu')<div class="form-error">{{ $message }}</div>@enderror
                             </div>
                         </div>
@@ -172,22 +171,21 @@
                         <div class="form-group">
                             <label class="form-label">Chữ chủ đạo</label>
                             <input type="text" name="main_character" class="form-control"
-                                   value="{{ old('main_character', $product->main_character) }}"
-                                   placeholder="Ví dụ: Phúc">
+                                value="{{ old('main_character', $product->main_character) }}" placeholder="Ví dụ: Phúc">
                             @error('main_character')<div class="form-error">{{ $message }}</div>@enderror
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="form-label">Đặc điểm tạo hình</label>
                             <textarea name="form_characteristics" class="form-control tiny-editor" rows="5"
-                                      placeholder="Chi tiết về thiết kế...">{{ old('form_characteristics', $product->form_characteristics) }}</textarea>
+                                placeholder="Chi tiết về thiết kế...">{{ old('form_characteristics', $product->form_characteristics) }}</textarea>
                             @error('form_characteristics')<div class="form-error">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="form-group">
                             <label class="form-label">Ý nghĩa văn hóa</label>
                             <textarea name="cultural_meaning" class="form-control tiny-editor" rows="5"
-                                      placeholder="Ý nghĩa biểu tượng...">{{ old('cultural_meaning', $product->cultural_meaning) }}</textarea>
+                                placeholder="Ý nghĩa biểu tượng...">{{ old('cultural_meaning', $product->cultural_meaning) }}</textarea>
                             @error('cultural_meaning')<div class="form-error">{{ $message }}</div>@enderror
                         </div>
 
@@ -279,8 +277,8 @@
                         {{-- Error message --}}
                         <div x-show="uploadError" x-cloak
                             style="background:rgba(224,82,82,0.12);border:1px solid rgba(224,82,82,0.3);
-                                                    color:var(--danger);border-radius:8px;padding:10px 14px;
-                                                    font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+                                                                        color:var(--danger);border-radius:8px;padding:10px 14px;
+                                                                        font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
                             &#9888; <span x-text="uploadError"></span>
                             <button type="button" @click="uploadError=''"
                                 style="margin-left:auto;background:none;border:none;color:var(--danger);cursor:pointer">&#10005;</button>
@@ -293,8 +291,8 @@
                             {{-- Existing media (server-rendered) --}}
                             @foreach($product->media as $m)
                                 <div class="media-item" data-id="{{ $m->id }}" style="position:relative;border-radius:10px;overflow:hidden;
-                                                                            border:2px solid {{ $m->is_cover ? 'var(--gold)' : 'var(--border)' }};
-                                                                            background:var(--surface2)">
+                                                border:2px solid {{ $m->is_cover ? 'var(--gold)' : 'var(--border)' }};
+                                                background:var(--surface2)">
 
                                     {{-- Type badge --}}
                                     <div class="media-type-badge">{{ $m->type }}</div>
@@ -312,14 +310,21 @@
                                             &#127925;</div>
                                     @endif
 
+                                    <div style="padding:4px 8px;">
+                                        <input type="text" class="form-control"
+                                            style="font-size:12px;padding:4px 8px;border-radius:4px"
+                                            placeholder="Nhập tiêu đề / chú thích..." value="{{ $m->caption }}"
+                                            onchange="updateCaption({{ $m->id }}, this)">
+                                    </div>
+
                                     <div style="padding:6px 8px;display:flex;gap:4px">
                                         @if($m->type === 'image')
                                             <button type="button" onclick="setCover({{ $m->id }}, this)" class="btn btn-sm"
                                                 title="Đặt làm ảnh bìa"
                                                 style="flex:1;padding:4px;font-size:11px;
-                                                                                                           background:{{ $m->is_cover ? 'var(--gold)' : 'var(--surface)' }};
-                                                                                                           color:{{ $m->is_cover ? '#000' : 'var(--muted)' }};
-                                                                                                           border:1px solid var(--border)">&#9733;</button>
+                                                                                                                                                                       background:{{ $m->is_cover ? 'var(--gold)' : 'var(--surface)' }};
+                                                                                                                                                                       color:{{ $m->is_cover ? '#000' : 'var(--muted)' }};
+                                                                                                                                                                       border:1px solid var(--border)">&#9733;</button>
                                         @endif
                                         <button type="button" onclick="deleteMedia({{ $m->id }}, this)"
                                             class="btn btn-danger btn-sm"
@@ -330,8 +335,9 @@
 
                             {{-- New uploads (Alpine) --}}
                             <template x-for="item in newMedia" :key="item.id">
-                                <div class="media-item" :data-id="item.id" style="position:relative;border-radius:10px;overflow:hidden;
-                                                            border:2px solid var(--border);background:var(--surface2)">
+                                <div class="media-item" :data-id="item.id"
+                                    style="position:relative;border-radius:10px;overflow:hidden;
+                                                                                border:2px solid var(--border);background:var(--surface2)">
 
                                     <div class="media-type-badge" x-text="item.type"></div>
 
@@ -345,11 +351,19 @@
                                         style="height:110px;display:flex;align-items:center;justify-content:center;font-size:36px">
                                         &#127925;</div>
 
+                                    <div style="padding:4px 8px;">
+                                        <input type="text" class="form-control"
+                                            style="font-size:12px;padding:4px 8px;border-radius:4px"
+                                            placeholder="Nhập tiêu đề / chú thích..." x-model="item.caption"
+                                            @change="updateCaptionNew(item)">
+                                    </div>
+
                                     <div style="padding:6px 8px;display:flex;gap:4px">
                                         <button type="button" @click="setCoverNew(item)" class="btn btn-sm"
-                                            x-show="item.type === 'image'" style="flex:1;padding:4px;font-size:11px;
-                                                                       background:var(--surface);color:var(--muted);
-                                                                       border:1px solid var(--border)">&#9733;</button>
+                                            x-show="item.type === 'image'"
+                                            style="flex:1;padding:4px;font-size:11px;
+                                                                                           background:var(--surface);color:var(--muted);
+                                                                                           border:1px solid var(--border)">&#9733;</button>
                                         <button type="button" @click="deleteMediaNew(item)" class="btn btn-danger btn-sm"
                                             style="flex:1;padding:4px;font-size:11px">&#10005;</button>
                                     </div>
@@ -369,7 +383,7 @@
             </div>{{-- /left --}}
 
             {{-- Right column --}}
-            <div>
+            <div class="sticky-col">
                 <div class="card" style="margin-bottom:20px">
                     <div class="card-header">
                         <h3>Thuộc tính</h3>
@@ -516,7 +530,25 @@
                         showToast(d.message ?? 'Xóa thất bại', 'error');
                     }
                 })
-                .catch(() => showToast('Lỗi kết nối', 'error'));
+        }
+
+        // ── Update Caption (Blade items) ───────────────────────────
+        function updateCaption(id, input) {
+            const val = input.value;
+            fetch(`/admin/media/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-TOKEN': CSRF(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ caption: val })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) showToast('Đã lưu tiêu đề');
+                    else showToast(d.message ?? 'Lưu thất bại', 'error');
+                })
+                .catch(() => showToast('Lỗi mạng', 'error'));
         }
 
         // ── Alpine.js – Media Manager ──────────────────────────────
@@ -600,6 +632,20 @@
                         showToast(data.message ?? 'Xóa thất bại', 'error');
                     }
                 },
+
+                async updateCaptionNew(item) {
+                    const res = await fetch(`/admin/media/${item.id}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'X-CSRF-TOKEN': CSRF(),
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ caption: item.caption })
+                    });
+                    const data = await res.json();
+                    if (data.success) { showToast('Đã lưu tiêu đề'); }
+                    else { showToast(data.message ?? 'Lỗi lưu', 'error'); }
+                }
             };
         }
     </script>

@@ -22,6 +22,14 @@
                         <option value="{{ $cat->slug }}" {{ request('danh_muc') === $cat->slug ? 'selected' : '' }}>{{ $cat->name }}</option>
                     @endforeach
                 </select>
+                @if(isset($materials) && $materials->count() > 0)
+                <select name="chat_lieu" onchange="this.form.submit()" style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:8px;font-size:13px;cursor:pointer">
+                    <option value="">Tất cả chất liệu</option>
+                    @foreach($materials as $mat)
+                        <option value="{{ $mat }}" {{ request('chat_lieu') === $mat ? 'selected' : '' }}>{{ $mat }}</option>
+                    @endforeach
+                </select>
+                @endif
                 <select name="sap_xep" onchange="this.form.submit()" style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:8px;font-size:13px;cursor:pointer">
                     <option value="">Mới nhất</option>
                     <option value="gia_tang" {{ request('sap_xep') === 'gia_tang' ? 'selected' : '' }}>Giá tăng dần</option>
@@ -29,7 +37,7 @@
                 </select>
                 <input type="text" name="tim_kiem" value="{{ request('tim_kiem') }}" placeholder="Tìm kiếm..." style="background:var(--surface);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:8px;font-size:13px;width:200px">
                 <button type="submit" class="btn btn-gold" style="padding:9px 18px">Tìm</button>
-                @if(request()->hasAny(['danh_muc','sap_xep','tim_kiem']))
+                @if(request()->hasAny(['danh_muc','sap_xep','tim_kiem','chat_lieu']))
                     <a href="{{ route('products.index') }}" style="color:var(--muted);font-size:13px">Xóa bộ lọc</a>
                 @endif
             </form>

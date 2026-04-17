@@ -100,16 +100,19 @@
             position: relative;
             width: 100%;
             max-width: 450px;
-            aspect-ratio: 4/5;
+            padding-bottom: 125%;
             border: 1px solid rgba(201, 168, 76, 0.3);
-            padding: 15px;
+            background-color: transparent !important;
             animation: morphFrame 15s infinite ease-in-out;
         }
 
         .hero-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: 100% !important;
+            height: 100% !important;
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            object-fit: cover !important;
             filter: contrast(1.1) brightness(0.9);
         }
 
@@ -201,6 +204,74 @@
             color: var(--gold);
             font-size: 12px;
         }
+
+        /* ── Hero slider dots ─────────────────────────── */
+        .hero-dots {
+            position: absolute;
+            bottom: -40px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Dot active */
+        .dot.active {
+            width: 18px;
+            border-radius: 10px;
+            background: rgba(201, 168, 76, 0.3); /* Phân biệt màu với dot-progress */
+            box-shadow: 0 0 10px rgba(201, 168, 76, 0.6);
+        }
+
+        .dot.active {
+            animation: dotPulse 0.4s ease;
+        }
+
+        @keyframes dotPulse {
+            0% {
+                transform: scale(0.8);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .dot {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dot-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            background: var(--gold);
+            transform-origin: left;
+            animation: dotProgress 4s linear forwards;
+            z-index: 2; /* Nổi lên trên nền dot */
+        }
+
+        @keyframes dotProgress {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(1);
+            }
+        }
     </style>
 @endpush
 
@@ -213,34 +284,86 @@
 
                 <div class="hero-content">
                     <div class="hero-label">
-                        <span>Kiệt tác di sản</span>
+                        <span>{{ $setting->hero_label }}</span>
                     </div>
                     <h1 class="hero-title">
-                        Tinh Hoa <br>
-                        <span>Trang Sức</span>
+                        {{ $setting->hero_title_line1 }} <br>
+                        <span>{{ $setting->hero_title_line2 }}</span>
                     </h1>
                     <p class="hero-desc">
-                        Tuyển tập những món bảo vật được hồi sinh từ dòng chảy Hán - Việt,
-                        chế tác thủ công với độ tinh xảo tuyệt đối dành riêng cho giới mộ điệu.
+                        {{ $setting->hero_description }}
                     </p>
                     <div class="hero-actions">
-                        <a href="{{ route('products.index') }}" class="btn btn-gold">Khám phá tuyệt tác</a>
-                        <a href="#featured" class="btn btn-outline"
-                            style="color: #fff; border-color: rgba(255,255,255,0.3);">
-                            Xem bộ sưu tập
-                        </a>
+                        @if($setting->hero_btn_primary_text)
+                            <a href="{{ route('products.index') }}"
+                                class="btn btn-gold">{{ $setting->hero_btn_primary_text }}</a>
+                        @endif
+                        @if($setting->hero_btn_secondary_text)
+                            <a href="#featured" class="btn btn-outline"
+                                style="color: #fff; border-color: rgba(255,255,255,0.3);">
+                                {{ $setting->hero_btn_secondary_text }}
+                            </a>
+                        @endif
                     </div>
                 </div>
 
-                <div class="hero-visual">
-                    <div class="main-img-wrapper">
-                        <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop"
-                            alt="Luxury Jewelry" class="hero-img">
+                <div class="hero-visual" x-data="heroSlider()" @mouseenter="pause = true" @mouseleave="pause = false">
+                    <div class="main-img-wrapper" style="overflow: hidden; padding-bottom: 125%; position: relative;">
+                        <!-- Slider Items -->
+                        @if($slides->count() > 0)
+                            @foreach($slides as $index => $slide)
+                                <div style="position: absolute; inset: 0; width: 100%; height: 100%; transition: all 0.8s cubic-bezier(0.4,0,0.2,1);"
+                                    :style="{ opacity: currentIndex === {{ $index }} ? 1 : 0, transform: currentIndex === {{ $index }} ? 'scale(1)' : 'scale(1.1)', zIndex: currentIndex === {{ $index }} ? 2 : 1 }">
+                                    <img src="{{ $slide->image_url }}" alt="Slide" class="hero-img">
+
+                                    @if($slide->caption)
+                                        <div
+                                            style="position: absolute; bottom: 0; left: 0; width: 100%; padding: 12px; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); text-align: center; color: var(--gold); font-size: 13px; font-style: italic; z-index: 5;">
+                                            {{ $slide->caption }}
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        @else
+                            <div
+                                style="width: 100%; height: 100%; background: #222; display: flex; align-items: center; justify-content: center; color: #555;">
+                                Chưa có ảnh (hãy truy cập Admin để tải lên)
+                            </div>
+                        @endif
 
                         <div
-                            style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; border-left: 2px solid var(--gold); border-bottom: 2px solid var(--gold);">
+                            style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; border-left: 2px solid var(--gold); border-bottom: 2px solid var(--gold); z-index: 10;">
                         </div>
+
+                        @if($slides->count() > 1)
+                            <div
+                                style="position: absolute; bottom: -40px; width: 100%; display: flex; justify-content: center; gap: 8px;">
+                                <template x-for="(s, index) in {{ $slides->count() }}" :key="index">
+                                    <div @click="currentIndex = index"
+                                        style="width: 8px; height: 8px; border-radius: 50%; cursor: pointer; transition: all 0.3s;"
+                                        :style="currentIndex === index ? 'background: var(--gold); transform: scale(1.3)' : 'background: rgba(255,255,255,0.2)'">
+                                    </div>
+                                </template>
+                            </div>
+                        @endif
                     </div>
+                    @if($slides->count() > 1)
+                        <div class="hero-dots">
+                            <template x-for="(s, index) in {{ $slides->count() }}" :key="index">
+                                <div class="dot" 
+                                    @click="currentIndex = index" 
+                                    :class="{ 'active': currentIndex === index }"
+                                    @mouseenter="pause = true"
+                                    @mouseleave="pause = false">
+                                    <template x-if="currentIndex === index">
+                                        <span class="dot-progress" 
+                                            @animationend="currentIndex = (currentIndex + 1) % total"
+                                            :style="pause ? 'animation-play-state: paused' : 'animation-play-state: running'"></span>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    @endif
                 </div>
 
             </div>
@@ -274,8 +397,8 @@
     <section class="section" id="featured">
         <div class="container">
             <div class="section-heading">
-                <h2>Sản phẩm nổi bật</h2>
-                <p>Những thiết kế được yêu thích nhất</p>
+                <h2>{{ $setting->featured_title }}</h2>
+                <p>{{ $setting->featured_subtitle }}</p>
                 <div class="gold-line"></div>
             </div>
 
@@ -312,19 +435,20 @@
         </div>
     </section>
 
-    <!-- About strip -->
-    <!-- <section style="background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 56px 0;">
-                                                        <div class="container">
-                                                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:40px; text-align:center">
-                                                                @foreach([['💎','Chất liệu cao cấp','Vàng 18K, Bạch kim, Kim cương thiên nhiên'], ['✋','Chế tác thủ công','Mỗi sản phẩm đều được chế tác tỉ mỉ bởi nghệ nhân'], ['📦','Giao hàng toàn quốc','Đóng gói sang trọng, giao hàng an toàn'], ['🛡','Bảo hành 12 tháng','Đổi trả miễn phí trong vòng 30 ngày']] as [$icon, $title, $desc])
-                                                                <div>
-                                                                    <div style="font-size:36px;margin-bottom:12px">{{ $icon }}</div>
-                                                                    <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:6px">{{ $title }}</div>
-                                                                    <div style="color:var(--muted);font-size:13px;line-height:1.6">{{ $desc }}</div>
-                                                                </div>
-                                                                @endforeach
-                                                            </div>
-                                                        </div>
-                                                    </section> -->
-
 @endsection
+
+@push('scripts')
+    <script>
+        function heroSlider() {
+            return {
+                currentIndex: 0,
+                pause: false,
+                total: {{ max(1, $slides->count()) }},
+                init() {
+                    // Để slider dựa hoàn toàn vào @animationend của thanh loading progress
+                    // vừa giúp đồng bộ đồ họa, vừa giải quyết triệt để lỗi khi ấn pause.
+                }
+            }
+        }
+    </script>
+@endpush

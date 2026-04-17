@@ -60,6 +60,22 @@ class MediaController extends Controller
     }
 
     /**
+     * AJAX: Update Media Data (caption, alt_text, etc)
+     */
+    public function update(Request $request, Media $media)
+    {
+        $request->validate([
+            'caption' => 'nullable|string|max:255',
+        ]);
+
+        $media->update([
+            'caption' => $request->caption,
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * AJAX: Set a media as the cover image.
      */
     public function setCover(Media $media)

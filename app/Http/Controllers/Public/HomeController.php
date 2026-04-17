@@ -14,7 +14,9 @@ class HomeController extends Controller
     {
         $featuredProducts = $this->productService->getFeatured(8);
         $categories       = Category::withCount('products')->orderBy('name')->get();
+        $setting          = \App\Models\HomeSetting::instance();
+        $slides           = \App\Models\HomeSlide::where('is_active', true)->orderBy('sort_order')->get();
 
-        return view('public.home', compact('featuredProducts', 'categories'));
+        return view('public.home', compact('featuredProducts', 'categories', 'setting', 'slides'));
     }
 }

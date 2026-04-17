@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\AboutController as AdminAboutController;
 use App\Http\Controllers\Admin\TeamMemberController as AdminTeamMemberController;
+use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\ProductController as PublicProductController;
 use App\Http\Controllers\Public\CategoryController as PublicCategoryController;
@@ -53,9 +54,18 @@ Route::prefix('admin')
         Route::put('about', [AdminAboutController::class, 'update'])->name('about.update');
         Route::resource('team-members', AdminTeamMemberController::class)->except('show');
 
+        // Home Page
+        Route::get('home', [AdminHomeController::class, 'edit'])->name('home.edit');
+        Route::put('home', [AdminHomeController::class, 'update'])->name('home.update');
+        Route::post('home/slides/upload', [AdminHomeController::class, 'slideUpload'])->name('home.slides.upload');
+        Route::patch('home/slides/{slide}', [AdminHomeController::class, 'slideUpdate'])->name('home.slides.update');
+        Route::delete('home/slides/{slide}', [AdminHomeController::class, 'slideDestroy'])->name('home.slides.destroy');
+        Route::post('home/slides/reorder', [AdminHomeController::class, 'slideReorder'])->name('home.slides.reorder');
+
         // Media
         Route::post('media/upload', [MediaController::class, 'upload'])->name('media.upload');
         Route::delete('media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
         Route::patch('media/{media}/cover', [MediaController::class, 'setCover'])->name('media.cover');
+        Route::patch('media/{media}', [MediaController::class, 'update'])->name('media.update');
         Route::post('media/reorder', [MediaController::class, 'reorder'])->name('media.reorder');
     });

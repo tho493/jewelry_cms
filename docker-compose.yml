@@ -1,8 +1,9 @@
-version: "3.9"
-
 services:
 
   app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: tho493/jewelry-cms:latest
     container_name: jewelry_app
     restart: unless-stopped

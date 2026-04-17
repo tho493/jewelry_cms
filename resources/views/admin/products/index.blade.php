@@ -3,6 +3,10 @@
 @section('page-title', 'Sản phẩm')
 
 @section('topbar-actions')
+    <form action="{{ route('admin.products.index') }}" method="GET" style="display:flex; gap:8px;">
+        <input type="text" name="search" class="form-control" placeholder="Mã hoặc tên..." value="{{ request('search') }}" style="padding: 5px 12px; font-size: 13px; height: auto;" />
+        <button type="submit" class="btn btn-secondary btn-sm">Tìm</button>
+    </form>
     <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-sm">+ Thêm sản phẩm</a>
 @endsection
 
@@ -20,7 +24,6 @@
                     <th>Tên sản phẩm</th>
                     <th>Danh mục</th>
                     <th>Giá</th>
-                    <th>Media</th>
                     <th>Trạng thái</th>
                     <th>Ngày tạo</th>
                     <th>Thao tác</th>
@@ -38,14 +41,14 @@
                         </td>
                         <td>
                             <div style="font-weight:500">{{ $product->name }}</div>
-                            <div style="font-size:12px;color:var(--muted)">{{ Str::limit($product->short_description, 60) }}</div>
+                            <div style="font-size:12px;color:var(--muted)">Mã: <span style="color:var(--text)">{{ $product->product_code ?? '—' }}</span></div>
                         </td>
                         <td style="color:var(--muted)">{{ $product->category?->name ?? '—' }}</td>
                         <td>{{ $product->price ? number_format($product->price) . 'đ' : '—' }}</td>
-                        <td style="color:var(--muted)">{{ $product->media_count ?? 0 }} files</td>
+                        <!-- <td style="color:var(--muted)">{{ $product->media_count ?? 0 }} files</td> -->
                         <td>
                             <span class="badge badge-{{ $product->status }}">
-                                {{ $product->status === 'published' ? 'Xuất bản' : 'Nháp' }}
+                                {{ $product->status === 'published' ? 'Hiển thị' : 'Ẩn' }}
                             </span>
                         </td>
                         <td style="color:var(--muted)">{{ $product->created_at->format('d/m/Y') }}</td>

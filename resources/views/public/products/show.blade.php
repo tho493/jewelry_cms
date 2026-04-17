@@ -15,23 +15,41 @@
             align-items: start;
         }
 
-        @media (max-width: 768px) {
-            .product-detail {
-                grid-template-columns: 1fr;
-                gap: 32px;
-            }
-        }
-
         /* Gallery */
         .gallery {
             position: sticky;
             top: 90px;
+            z-index: 10;
+        }
+
+        @media (max-width: 991px) {
+            .product-detail {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .gallery {
+                position: static !important;
+                z-index: 1;
+            }
+
+            .product-title {
+                font-size: 28px !important;
+            }
+
+            .product-title span {
+                font-size: 20px !important;
+            }
+
+            .gallery-thumb {
+                width: 60px !important;
+                height: 60px !important;
+            }
         }
 
         .gallery-main {
             width: 100%;
             aspect-ratio: 1/1;
-            /* Hoặc chiều cao cố định */
             background: #f8f9fa;
             display: flex;
             align-items: center;
@@ -291,11 +309,17 @@
                 <!-- Info -->
                 <div>
                     <div class="product-label">{{ $product->category?->name ?? 'Trang sức' }}</div>
-                    <h1 class="product-title">{{ $product->name }}</h1>
+                    <h1 class="product-title">
+                        {{ $product->name }}
+                        @if($product->name_hantu)
+                            <span
+                                style="font-size: 26px; color: var(--gold); font-weight: 400; margin-left: 6px;">({{ $product->name_hantu }})</span>
+                        @endif
+                    </h1>
 
-                    <div class="product-price">
-                        {{ $product->price ? number_format($product->price) . 'đ' : 'Liên hệ' }}
-                    </div>
+                    <!-- <div class="product-price">
+                                        {{ $product->price ? number_format($product->price) . 'đ' : 'Liên hệ' }}
+                                    </div> -->
 
                     @if($product->short_description)
                         <p style="color:var(--muted);font-size:15px;line-height:1.7;margin-bottom:24px">
@@ -304,9 +328,23 @@
                     @endif
 
                     <div class="product-meta">
+                        @if($product->product_code)
+                            <div class="product-meta-row">
+                                <span class="product-meta-label">Mã sản phẩm</span>
+                                <span class="product-meta-value">{{ $product->product_code }}</span>
+                            </div>
+                        @endif
+
+                        @if($product->main_character)
+                            <div class="product-meta-row">
+                                <span class="product-meta-label">Chữ chủ đạo</span>
+                                <span class="product-meta-value">{{ $product->main_character }}</span>
+                            </div>
+                        @endif
+
                         @if($product->material)
                             <div class="product-meta-row">
-                                <span class="product-meta-label">Chất liệu</span>
+                                <span class="product-meta-label">Chất liệu - Kỹ thuật</span>
                                 <span class="product-meta-value">{{ $product->material }}</span>
                             </div>
                         @endif
@@ -317,10 +355,6 @@
                                     style="color:var(--gold)">{{ $product->category->name }}</a>
                             </div>
                         @endif
-                        <!-- <div class="product-meta-row">
-                                                                                                    <span class="product-meta-label">Trạng thái</span>
-                                                                                                    <span class="product-meta-value" style="color:#4caf7d">● Còn hàng</span>
-                                                                                                </div> -->
                     </div>
 
                     @if($product->audios->count() > 0)
@@ -349,11 +383,24 @@
             </div>
 
             <!-- Description -->
-            @if($product->description)
+            @if($product->description || $product->form_characteristics || $product->cultural_meaning)
                 <div
                     style="max-width:800px; margin: 64px auto 0; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.06)">
-                    <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">Mô tả sản phẩm</h2>
-                    <div class="product-desc">{!! $product->description !!}</div>
+
+                    @if($product->form_characteristics)
+                        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">Đặc điểm tạo hình</h2>
+                        <div class="product-desc" style="margin-bottom:48px">{!! $product->form_characteristics !!}</div>
+                    @endif
+
+                    @if($product->cultural_meaning)
+                        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">Ý nghĩa văn hóa</h2>
+                        <div class="product-desc" style="margin-bottom:48px">{!! $product->cultural_meaning !!}</div>
+                    @endif
+
+                    @if($product->description)
+                        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">Mô tả sản phẩm</h2>
+                        <div class="product-desc">{!! $product->description !!}</div>
+                    @endif
                 </div>
             @endif
         </div>

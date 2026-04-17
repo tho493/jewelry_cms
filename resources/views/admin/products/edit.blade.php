@@ -140,12 +140,23 @@
                         <h3>Thông tin sản phẩm</h3>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
-                            <label class="form-label">Tên sản phẩm <span class="req">*</span></label>
-                            <input type="text" name="name" class="form-control" value="{{ old('name', $product->name) }}"
-                                required>
-                            @error('name')<div class="form-error">{{ $message }}</div>@enderror
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+                            <div class="form-group" style="margin-bottom:0">
+                                <label class="form-label">Tên (Tiếng Việt) <span class="req">*</span></label>
+                                <input type="text" name="name" class="form-control" value="{{ old('name', $product->name) }}"
+                                    required>
+                                @error('name')<div class="form-error">{{ $message }}</div>@enderror
+                            </div>
+        
+                            <div class="form-group" style="margin-bottom:0">
+                                <label class="form-label">Tên (Chữ Hán)</label>
+                                <input type="text" name="name_hantu" class="form-control"
+                                       value="{{ old('name_hantu', $product->name_hantu) }}"
+                                       placeholder="Ví dụ: 祥">
+                                @error('name_hantu')<div class="form-error">{{ $message }}</div>@enderror
+                            </div>
                         </div>
+
                         <div class="form-group">
                             <label class="form-label">Slug</label>
                             <input type="text" class="form-control" value="{{ $product->slug }}" disabled
@@ -155,11 +166,36 @@
                             <label class="form-label">Mô tả ngắn</label>
                             <input type="text" name="short_description" class="form-control"
                                 value="{{ old('short_description', $product->short_description) }}">
+                            @error('short_description')<div class="form-error">{{ $message }}</div>@enderror
                         </div>
+
                         <div class="form-group">
+                            <label class="form-label">Chữ chủ đạo</label>
+                            <input type="text" name="main_character" class="form-control"
+                                   value="{{ old('main_character', $product->main_character) }}"
+                                   placeholder="Ví dụ: Phúc">
+                            @error('main_character')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Đặc điểm tạo hình</label>
+                            <textarea name="form_characteristics" class="form-control tiny-editor" rows="5"
+                                      placeholder="Chi tiết về thiết kế...">{{ old('form_characteristics', $product->form_characteristics) }}</textarea>
+                            @error('form_characteristics')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Ý nghĩa văn hóa</label>
+                            <textarea name="cultural_meaning" class="form-control tiny-editor" rows="5"
+                                      placeholder="Ý nghĩa biểu tượng...">{{ old('cultural_meaning', $product->cultural_meaning) }}</textarea>
+                            @error('cultural_meaning')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0">
                             <label class="form-label">Mô tả chi tiết</label>
                             <textarea name="description" id="editor" class="form-control"
                                 rows="12">{{ old('description', $product->description) }}</textarea>
+                            @error('description')<div class="form-error">{{ $message }}</div>@enderror
                         </div>
                     </div>
                 </div>
@@ -241,9 +277,10 @@
                         </div>
 
                         {{-- Error message --}}
-                        <div x-show="uploadError" x-cloak style="background:rgba(224,82,82,0.12);border:1px solid rgba(224,82,82,0.3);
-                                    color:var(--danger);border-radius:8px;padding:10px 14px;
-                                    font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+                        <div x-show="uploadError" x-cloak
+                            style="background:rgba(224,82,82,0.12);border:1px solid rgba(224,82,82,0.3);
+                                                    color:var(--danger);border-radius:8px;padding:10px 14px;
+                                                    font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
                             &#9888; <span x-text="uploadError"></span>
                             <button type="button" @click="uploadError=''"
                                 style="margin-left:auto;background:none;border:none;color:var(--danger);cursor:pointer">&#10005;</button>
@@ -256,8 +293,8 @@
                             {{-- Existing media (server-rendered) --}}
                             @foreach($product->media as $m)
                                 <div class="media-item" data-id="{{ $m->id }}" style="position:relative;border-radius:10px;overflow:hidden;
-                                            border:2px solid {{ $m->is_cover ? 'var(--gold)' : 'var(--border)' }};
-                                            background:var(--surface2)">
+                                                                            border:2px solid {{ $m->is_cover ? 'var(--gold)' : 'var(--border)' }};
+                                                                            background:var(--surface2)">
 
                                     {{-- Type badge --}}
                                     <div class="media-type-badge">{{ $m->type }}</div>
@@ -278,10 +315,11 @@
                                     <div style="padding:6px 8px;display:flex;gap:4px">
                                         @if($m->type === 'image')
                                             <button type="button" onclick="setCover({{ $m->id }}, this)" class="btn btn-sm"
-                                                title="Đặt làm ảnh bìa" style="flex:1;padding:4px;font-size:11px;
-                                                           background:{{ $m->is_cover ? 'var(--gold)' : 'var(--surface)' }};
-                                                           color:{{ $m->is_cover ? '#000' : 'var(--muted)' }};
-                                                           border:1px solid var(--border)">&#9733;</button>
+                                                title="Đặt làm ảnh bìa"
+                                                style="flex:1;padding:4px;font-size:11px;
+                                                                                                           background:{{ $m->is_cover ? 'var(--gold)' : 'var(--surface)' }};
+                                                                                                           color:{{ $m->is_cover ? '#000' : 'var(--muted)' }};
+                                                                                                           border:1px solid var(--border)">&#9733;</button>
                                         @endif
                                         <button type="button" onclick="deleteMedia({{ $m->id }}, this)"
                                             class="btn btn-danger btn-sm"
@@ -293,7 +331,7 @@
                             {{-- New uploads (Alpine) --}}
                             <template x-for="item in newMedia" :key="item.id">
                                 <div class="media-item" :data-id="item.id" style="position:relative;border-radius:10px;overflow:hidden;
-                                            border:2px solid var(--border);background:var(--surface2)">
+                                                            border:2px solid var(--border);background:var(--surface2)">
 
                                     <div class="media-type-badge" x-text="item.type"></div>
 
@@ -310,8 +348,8 @@
                                     <div style="padding:6px 8px;display:flex;gap:4px">
                                         <button type="button" @click="setCoverNew(item)" class="btn btn-sm"
                                             x-show="item.type === 'image'" style="flex:1;padding:4px;font-size:11px;
-                                                       background:var(--surface);color:var(--muted);
-                                                       border:1px solid var(--border)">&#9733;</button>
+                                                                       background:var(--surface);color:var(--muted);
+                                                                       border:1px solid var(--border)">&#9733;</button>
                                         <button type="button" @click="deleteMediaNew(item)" class="btn btn-danger btn-sm"
                                             style="flex:1;padding:4px;font-size:11px">&#10005;</button>
                                     </div>
@@ -349,6 +387,13 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label class="form-label">Mã sản phẩm</label>
+                            <input type="text" name="product_code" class="form-control"
+                                value="{{ old('product_code', $product->product_code) }}"
+                                placeholder="Bỏ trống để tự động sinh">
+                            @error('product_code')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="form-group">
                             <label class="form-label">Giá (VND)</label>
                             <input type="number" name="price" class="form-control"
                                 value="{{ old('price', $product->price) }}" min="0">
@@ -361,9 +406,9 @@
                         <div class="form-group" style="margin-bottom:0">
                             <label class="form-label">Trạng thái <span class="req">*</span></label>
                             <select name="status" class="form-control">
-                                <option value="draft" {{ old('status', $product->status) === 'draft' ? 'selected' : '' }}>Bản
-                                    nháp</option>
-                                <option value="published" {{ old('status', $product->status) === 'published' ? 'selected' : '' }}>Xuất bản</option>
+                                <option value="draft" {{ old('status', $product->status) === 'draft' ? 'selected' : '' }}>Ẩn
+                                </option>
+                                <option value="published" {{ old('status', $product->status) === 'published' ? 'selected' : '' }}>Hiển thị</option>
                             </select>
                         </div>
                     </div>
@@ -385,7 +430,6 @@
         </div>
     </form>
 
-    {{-- Form xóa đặt NGOÀI form cập nhật — tránh nested form bug --}}
     <form id="delete-product-form" method="POST" action="{{ route('admin.products.destroy', $product) }}"
         style="display:none">
         @csrf @method('DELETE')
@@ -403,7 +447,7 @@
     <script>
         // ── TinyMCE ───────────────────────────────────────────────
         tinymce.init({
-            selector: '#editor',
+            selector: '#editor, .tiny-editor',
             plugins: 'anchor autolink lists link image table wordcount',
             toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter | bullist numlist | link image | table',
             skin: 'oxide-dark',

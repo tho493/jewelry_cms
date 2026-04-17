@@ -599,10 +599,11 @@
     <header class="header">
         <div class="header-inner">
             <a href="{{ route('home') }}" class="logo">
-                💎 {{ config('app.name') }}
+                {{ config('app.name') }}
             </a>
             <nav class="nav">
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">Giới thiệu</a>
                 <a href="{{ route('products.index') }}"
                     class="{{ request()->routeIs('products*') ? 'active' : '' }}">Sản phẩm</a>
             </nav>
@@ -622,14 +623,17 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <div class="logo">💎 {{ config('app.name') }}</div>
+                    <div class="logo">{{ config('app.name') }}</div>
                     <p>Website này dùng để tổng hợp kết quả nghiên cứu sản phẩm dưới dạng trực quan. Phục vụ báo cáo,
                         trưng bày, thuyết trình và số hóa học dữ liệu.</p>
                 </div>
                 <div class="footer-col">
-                    <h4>Danh mục</h4>
+                    <h4>Hệ thống</h4>
+                    <a href="{{ route('home') }}">Trang chủ</a>
+                    <a href="{{ route('about') }}">Về chúng tôi</a>
                     <a href="{{ route('products.index') }}">Tất cả sản phẩm</a>
                     <a href="{{ route('products.index') }}?danh_muc=nhan">Nhẫn</a>
+                </div>
                     <a href="{{ route('products.index') }}?danh_muc=day-chuyen">Dây chuyền</a>
                     <a href="{{ route('products.index') }}?danh_muc=vong-tay">Vòng tay</a>
                 </div>

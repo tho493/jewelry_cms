@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Trang sức cao cấp – ' . config('app.name'))
-@section('meta_description', 'Khám phá bộ sưu tập trang sức cao cấp: nhẫn vàng, dây chuyền kim cương, vòng tay bạc.')
+@section('title', 'Bộ sưu tập trang sức – ' . config('app.name'))
+@section('meta_description', 'Khám phá bộ sưu tập trang sức văn hóa Việt - Trung.')
 
 @push('styles')
     <style>
@@ -306,7 +306,6 @@
                 </div>
             @else
                 <div style="text-align:center;padding:80px 0;color:var(--muted)">
-                    <div style="font-size:48px;margin-bottom:16px">💎</div>
                     <p>Sản phẩm sắp ra mắt. Hãy quay lại sau!</p>
                 </div>
             @endif
@@ -315,17 +314,17 @@
 
     <!-- About strip -->
     <!-- <section style="background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 56px 0;">
-                                                <div class="container">
-                                                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:40px; text-align:center">
-                                                        @foreach([['💎','Chất liệu cao cấp','Vàng 18K, Bạch kim, Kim cương thiên nhiên'], ['✋','Chế tác thủ công','Mỗi sản phẩm đều được chế tác tỉ mỉ bởi nghệ nhân'], ['📦','Giao hàng toàn quốc','Đóng gói sang trọng, giao hàng an toàn'], ['🛡','Bảo hành 12 tháng','Đổi trả miễn phí trong vòng 30 ngày']] as [$icon, $title, $desc])
-                                                        <div>
-                                                            <div style="font-size:36px;margin-bottom:12px">{{ $icon }}</div>
-                                                            <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:6px">{{ $title }}</div>
-                                                            <div style="color:var(--muted);font-size:13px;line-height:1.6">{{ $desc }}</div>
+                                                        <div class="container">
+                                                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:40px; text-align:center">
+                                                                @foreach([['💎','Chất liệu cao cấp','Vàng 18K, Bạch kim, Kim cương thiên nhiên'], ['✋','Chế tác thủ công','Mỗi sản phẩm đều được chế tác tỉ mỉ bởi nghệ nhân'], ['📦','Giao hàng toàn quốc','Đóng gói sang trọng, giao hàng an toàn'], ['🛡','Bảo hành 12 tháng','Đổi trả miễn phí trong vòng 30 ngày']] as [$icon, $title, $desc])
+                                                                <div>
+                                                                    <div style="font-size:36px;margin-bottom:12px">{{ $icon }}</div>
+                                                                    <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;margin-bottom:6px">{{ $title }}</div>
+                                                                    <div style="color:var(--muted);font-size:13px;line-height:1.6">{{ $desc }}</div>
+                                                                </div>
+                                                                @endforeach
+                                                            </div>
                                                         </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            </section> -->
+                                                    </section> -->
 
 @endsection

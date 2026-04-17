@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\ProductService;
@@ -13,9 +14,10 @@ class ProductController extends Controller
 {
     public function __construct(private ProductService $productService) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = $this->productService->getAllForAdmin();
+        $search = $request->query('search');
+        $products = $this->productService->getAllForAdmin($search);
         return view('admin.products.index', compact('products'));
     }
 

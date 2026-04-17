@@ -10,11 +10,17 @@ class ProductService
 {
     public function store(array $data): Product
     {
+        if (empty($data['product_code'])) {
+            $data['product_code'] = 'SP-' . strtoupper(Str::random(6));
+        }
         return Product::create($data);
     }
 
     public function update(Product $product, array $data): Product
     {
+        if (array_key_exists('product_code', $data) && empty($data['product_code'])) {
+            $data['product_code'] = 'SP-' . strtoupper(Str::random(6));
+        }
         $product->update($data);
         return $product->fresh();
     }
@@ -51,10 +57,17 @@ class ProductService
             ->get();
     }
 
-    public function getAllForAdmin(int $perPage = 20): LengthAwarePaginator
+    public function getAllForAdmin(?string $search = null, int $perPage = 20): LengthAwarePaginator
     {
-        return Product::with('category')
-            ->latest()
-            ->paginate($perPage);
+        $query = Product::with('category')->latest();
+        
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('product_code', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->paginate($perPage)->withQueryString();
     }
 }

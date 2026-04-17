@@ -82,12 +82,22 @@
             <div class="card" style="margin-bottom:20px">
                 <div class="card-header"><h3>Thông tin sản phẩm</h3></div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label class="form-label">Tên sản phẩm <span class="req">*</span></label>
-                        <input type="text" name="name" class="form-control"
-                               value="{{ old('name') }}"
-                               placeholder="Nhẫn vàng 18K kim cương..." required>
-                        @error('name')<div class="form-error">{{ $message }}</div>@enderror
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+                        <div class="form-group" style="margin-bottom:0">
+                            <label class="form-label">Tên (Tiếng Việt)<span class="req">*</span></label>
+                            <input type="text" name="name" class="form-control"
+                                   value="{{ old('name') }}"
+                                   placeholder="Nhẫn vàng 18K kim cương..." required>
+                            @error('name')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+    
+                        <div class="form-group" style="margin-bottom:0">
+                            <label class="form-label">Tên (Chữ Hán)</label>
+                            <input type="text" name="name_hantu" class="form-control"
+                                   value="{{ old('name_hantu') }}"
+                                   placeholder="Ví dụ: 祥">
+                            @error('name_hantu')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Mô tả ngắn</label>
@@ -96,6 +106,29 @@
                                placeholder="Nhẫn đính kim cương thiên nhiên, chất liệu vàng 18K...">
                         @error('short_description')<div class="form-error">{{ $message }}</div>@enderror
                     </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Chữ chủ đạo</label>
+                        <input type="text" name="main_character" class="form-control"
+                               value="{{ old('main_character') }}"
+                               placeholder="Ví dụ: Phúc">
+                        @error('main_character')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Đặc điểm tạo hình</label>
+                        <textarea name="form_characteristics" class="form-control tiny-editor" rows="5"
+                                  placeholder="Chi tiết về thiết kế...">{{ old('form_characteristics') }}</textarea>
+                        @error('form_characteristics')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="form-label">Ý nghĩa văn hóa</label>
+                        <textarea name="cultural_meaning" class="form-control tiny-editor" rows="5"
+                                  placeholder="Ý nghĩa biểu tượng...">{{ old('cultural_meaning') }}</textarea>
+                        @error('cultural_meaning')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+
                     <div class="form-group">
                         <label class="form-label">Mô tả chi tiết</label>
                         <textarea name="description" id="editor" class="form-control" rows="10"
@@ -164,6 +197,13 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label class="form-label">Mã sản phẩm</label>
+                        <input type="text" name="product_code" class="form-control"
+                               value="{{ old('product_code') }}"
+                               placeholder="Bỏ trống để tự động sinh">
+                        @error('product_code')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="form-group">
                         <label class="form-label">Giá (VND)</label>
                         <input type="number" name="price" class="form-control"
                                value="{{ old('price') }}" placeholder="5000000" min="0">
@@ -177,8 +217,8 @@
                     <div class="form-group" style="margin-bottom:0">
                         <label class="form-label">Trạng thái <span class="req">*</span></label>
                         <select name="status" class="form-control">
-                            <option value="draft"      {{ old('status', 'draft') === 'draft'      ? 'selected' : '' }}>Bản nháp</option>
-                            <option value="published"  {{ old('status')           === 'published'  ? 'selected' : '' }}>Xuất bản</option>
+                            <option value="draft"      {{ old('status', 'draft') === 'draft'      ? 'selected' : '' }}>Ẩn</option>
+                            <option value="published"  {{ old('status')           === 'published'  ? 'selected' : '' }}>Hiển thị</option>
                         </select>
                     </div>
                 </div>
@@ -203,7 +243,7 @@
         referrerpolicy="origin"></script>
 <script>
 tinymce.init({
-    selector: '#editor',
+    selector: '#editor, .tiny-editor',
     plugins: 'anchor autolink lists link image table wordcount',
     toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | bullist numlist | link image | table',
     skin: 'oxide-dark',

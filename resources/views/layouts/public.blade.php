@@ -634,9 +634,6 @@
                     <a href="{{ route('products.index') }}">Tất cả sản phẩm</a>
                     <a href="{{ route('products.index') }}?danh_muc=nhan">Nhẫn</a>
                 </div>
-                    <a href="{{ route('products.index') }}?danh_muc=day-chuyen">Dây chuyền</a>
-                    <a href="{{ route('products.index') }}?danh_muc=vong-tay">Vòng tay</a>
-                </div>
                 <div class="footer-col">
                     <h4>Liên hệ</h4>
                     <a href="#">chitho040903@gmail.com</a>

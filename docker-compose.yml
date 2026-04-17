@@ -77,7 +77,9 @@ services:
 
 volumes:
   mysql_data:
+    name: jewelry_mysql_data
   app_storage:
+    name: jewelry_app_storage
 
 networks:
   jewelry_net:

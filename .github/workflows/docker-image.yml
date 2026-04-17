@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag jewelry-cms:latest
+      run: docker build . --file Dockerfile
 
     - name: Push image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/jewelry-cms:latest
+      run: docker push tho493/jewelry-cms:latest

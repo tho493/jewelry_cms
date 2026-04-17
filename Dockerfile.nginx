@@ -1,8 +1,31 @@
+# ═══════════════════════════════════════════════════════════════
+# Stage 1: Build Vite assets
+# ═══════════════════════════════════════════════════════════════
+FROM node:20-alpine AS node-builder
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+
+COPY vite.config.js tailwind.config.js postcss.config.js ./
+COPY resources/ resources/
+
+ARG VITE_APP_NAME=cms
+ENV VITE_APP_NAME=$VITE_APP_NAME
+
+RUN npm run build
+
+# ═══════════════════════════════════════════════════════════════
+# Stage 2: Nginx
+# ═══════════════════════════════════════════════════════════════
 FROM nginx:1.27-alpine
 
 # copy config
-
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 
-# copy public từ source build
+# copy public từ source host
 COPY public /var/www/html/public
+
+# copy thư mục build của Vite từ stage 1 vào public/build
+COPY --from=node-builder /app/public/build /var/www/html/public/build

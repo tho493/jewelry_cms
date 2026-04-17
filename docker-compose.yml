@@ -23,7 +23,7 @@ services:
       TINY_CLOUD_KEY: "${TINY_CLOUD_KEY}"
 
     volumes:
-      - app_storage:/var/www/html/storage
+      - ./docker_data/storage:/var/www/html/storage
 
     depends_on:
       mysql:
@@ -44,7 +44,7 @@ services:
       - "8100:80"
 
     volumes:
-      - app_storage:/var/www/html/storage:ro
+      - ./docker_data/storage:/var/www/html/storage:ro
 
     depends_on:
       - app
@@ -62,7 +62,7 @@ services:
       MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-secret_root}"
       MYSQL_ALLOW_EMPTY_PASSWORD: "no"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./docker_data/mysql:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
     ports:
       - "${MYSQL_PORT:-33306}:3306"
@@ -74,12 +74,6 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
-
-volumes:
-  mysql_data:
-    name: jewelry_mysql_data
-  app_storage:
-    name: jewelry_app_storage
 
 networks:
   jewelry_net:

@@ -106,6 +106,21 @@
             gap: 14px;
         }
 
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: var(--gold);
+            cursor: pointer;
+            padding: 4px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mobile-nav {
+            display: none;
+        }
+
         /* ── Container ───────────────────────────────── */
         .container {
             max-width: 1200px;
@@ -319,6 +334,33 @@
         @media (max-width: 768px) {
             .nav {
                 display: none;
+            }
+            .mobile-menu-btn {
+                display: flex;
+            }
+            .mobile-nav {
+                display: flex;
+                flex-direction: column;
+                background: var(--surface);
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+                padding: 8px 24px;
+            }
+            .mobile-nav a {
+                padding: 14px 0;
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text);
+                text-decoration: none;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+            }
+            .mobile-nav a:last-child {
+                border-bottom: none;
+            }
+            .mobile-nav a.active {
+                color: var(--gold);
             }
 
             .footer-grid {
@@ -596,7 +638,7 @@
     </div>
 
     <!-- Header -->
-    <header class="header">
+    <header class="header" x-data="{ mobileMenuOpen: false }">
         <div class="header-inner">
             <a href="{{ route('home') }}" class="logo">
                 {{ config('app.name') }}
@@ -611,7 +653,19 @@
                 @auth
                     <a href="{{ route('admin.dashboard') }}" style="font-size:12px;color:var(--gold)">Admin</a>
                 @endauth
+                
+                <button type="button" class="mobile-menu-btn" @click="mobileMenuOpen = !mobileMenuOpen" aria-label="Toggle menu">
+                    <svg x-show="!mobileMenuOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    <svg x-show="mobileMenuOpen" style="display: none;" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
             </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <div class="mobile-nav" x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" style="display: none;" x-transition>
+            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
+            <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">Giới thiệu</a>
+            <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products*') ? 'active' : '' }}">Sản phẩm</a>
         </div>
     </header>
 

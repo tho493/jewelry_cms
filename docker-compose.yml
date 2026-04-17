@@ -23,7 +23,7 @@ services:
       TINY_CLOUD_KEY: "${TINY_CLOUD_KEY}"
 
     volumes:
-      - ./docker_data/storage:/var/www/html/storage
+      - ./docker_data/storage_public:/var/www/html/storage/app/public
 
     depends_on:
       mysql:
@@ -44,7 +44,7 @@ services:
       - "8100:80"
 
     volumes:
-      - ./docker_data/storage:/var/www/html/storage:ro
+      - ./docker_data/storage_public:/var/www/html/storage/app/public:ro
 
     depends_on:
       - app

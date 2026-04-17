@@ -9,7 +9,6 @@
         .hero {
             position: relative;
             min-height: 100vh;
-            /* Tăng chiều cao để phủ kín màn hình ban đầu */
             display: flex;
             align-items: center;
             background: #0a0a0a;
@@ -17,7 +16,6 @@
             color: #fff;
         }
 
-        /* Hiệu ứng ánh sáng nền di chuyển */
         .hero::before {
             content: '';
             position: absolute;
@@ -57,7 +55,7 @@
             animation: fadeInUp 1s forwards 0.5s;
         }
 
-        /* Chữ cái đầu tiên lớn (Drop Cap) hoặc Line trang trí */
+        /* Chữ cái đầu tiên lớn */
         .hero-label {
             font-size: 13px;
             color: var(--gold);
@@ -72,7 +70,6 @@
         .hero-title {
             font-family: 'Cormorant Garamond', serif;
             font-size: clamp(48px, 8vw, 84px);
-            /* Responsive font size */
             font-weight: 500;
             line-height: 1;
             margin-bottom: 25px;
@@ -84,23 +81,28 @@
             font-style: italic;
             color: var(--gold);
             margin-left: 60px;
-            /* Tạo độ lệch nghệ thuật */
             position: relative;
         }
 
-        /* Hiệu ứng trang trí cho hình ảnh bên phải */
+        .hero-actions {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
         .hero-visual {
             position: relative;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
         .main-img-wrapper {
             position: relative;
-            width: 100%;
-            max-width: 450px;
-            padding-bottom: 125%;
+            width: min(100%, 450px, 55vh);
+            aspect-ratio: 4 / 5;
             border: 1px solid rgba(201, 168, 76, 0.3);
             background-color: transparent !important;
             animation: morphFrame 15s infinite ease-in-out;
@@ -116,7 +118,6 @@
             filter: contrast(1.1) brightness(0.9);
         }
 
-        /* Nút bấm sang chảnh hơn */
         .btn-gold {
             background: var(--gold);
             color: #000;
@@ -144,6 +145,10 @@
             }
         }
 
+        .hero-mobile-bg {
+            display: none;
+        }
+
         /* Responsive cho Mobile */
         @media (max-width: 991px) {
             .hero-wrapper {
@@ -168,9 +173,40 @@
             }
 
             .hero-visual {
+                display: flex;
+            }
+
+            .main-img-wrapper {
                 display: none;
             }
 
+            .hero-dots {
+                margin-top: 10px;
+            }
+
+            .hero-mobile-bg {
+                display: block;
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+            }
+
+            .hero-mobile-bg .mobile-slide {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                transition: opacity 1s ease;
+            }
+
+            .hero-mobile-bg img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: brightness(0.3) contrast(1.1);
+            }
         }
 
         /* ── Category chips ─────────────────────────── */
@@ -207,12 +243,12 @@
 
         /* ── Hero slider dots ─────────────────────────── */
         .hero-dots {
-            position: absolute;
-            bottom: -40px;
             width: 100%;
             display: flex;
             justify-content: center;
             gap: 10px;
+            z-index: 10;
+            margin-top: 30px;
         }
 
         .dot {
@@ -228,7 +264,7 @@
         .dot.active {
             width: 18px;
             border-radius: 10px;
-            background: rgba(201, 168, 76, 0.3); /* Phân biệt màu với dot-progress */
+            background: rgba(201, 168, 76, 0.3);
             box-shadow: 0 0 10px rgba(201, 168, 76, 0.6);
         }
 
@@ -260,7 +296,7 @@
             background: var(--gold);
             transform-origin: left;
             animation: dotProgress 4s linear forwards;
-            z-index: 2; /* Nổi lên trên nền dot */
+            z-index: 2;
         }
 
         @keyframes dotProgress {
@@ -278,7 +314,19 @@
 @section('content')
 
     <!-- Hero -->
-    <section class="hero">
+    <section class="hero" x-data x-init="initHeroSlider({{ max(1, $slides->count()) }})">
+
+        <!-- Nền ảnh cho màn hình di động -->
+        <div class="hero-mobile-bg">
+            @if($slides->count() > 0)
+                @foreach($slides as $index => $slide)
+                    <div class="mobile-slide" :style="{ opacity: $store.slider.current === {{ $index }} ? 1 : 0 }">
+                        <img src="{{ $slide->image_url }}" alt="Mobile Background">
+                    </div>
+                @endforeach
+            @endif
+        </div>
+
         <div class="container">
             <div class="hero-wrapper">
 
@@ -307,13 +355,13 @@
                     </div>
                 </div>
 
-                <div class="hero-visual" x-data="heroSlider()" @mouseenter="pause = true" @mouseleave="pause = false">
-                    <div class="main-img-wrapper" style="overflow: hidden; padding-bottom: 125%; position: relative;">
+                <div class="hero-visual" @mouseenter="$store.slider.pause = true" @mouseleave="$store.slider.pause = false">
+                    <div class="main-img-wrapper" style="overflow: hidden; position: relative;">
                         <!-- Slider Items -->
                         @if($slides->count() > 0)
                             @foreach($slides as $index => $slide)
                                 <div style="position: absolute; inset: 0; width: 100%; height: 100%; transition: all 0.8s cubic-bezier(0.4,0,0.2,1);"
-                                    :style="{ opacity: currentIndex === {{ $index }} ? 1 : 0, transform: currentIndex === {{ $index }} ? 'scale(1)' : 'scale(1.1)', zIndex: currentIndex === {{ $index }} ? 2 : 1 }">
+                                    :style="{ opacity: $store.slider.current === {{ $index }} ? 1 : 0, transform: $store.slider.current === {{ $index }} ? 'scale(1)' : 'scale(1.1)', zIndex: $store.slider.current === {{ $index }} ? 2 : 1 }">
                                     <img src="{{ $slide->image_url }}" alt="Slide" class="hero-img">
 
                                     @if($slide->caption)
@@ -335,30 +383,18 @@
                             style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; border-left: 2px solid var(--gold); border-bottom: 2px solid var(--gold); z-index: 10;">
                         </div>
 
-                        @if($slides->count() > 1)
-                            <div
-                                style="position: absolute; bottom: -40px; width: 100%; display: flex; justify-content: center; gap: 8px;">
-                                <template x-for="(s, index) in {{ $slides->count() }}" :key="index">
-                                    <div @click="currentIndex = index"
-                                        style="width: 8px; height: 8px; border-radius: 50%; cursor: pointer; transition: all 0.3s;"
-                                        :style="currentIndex === index ? 'background: var(--gold); transform: scale(1.3)' : 'background: rgba(255,255,255,0.2)'">
-                                    </div>
-                                </template>
-                            </div>
-                        @endif
                     </div>
+
                     @if($slides->count() > 1)
                         <div class="hero-dots">
                             <template x-for="(s, index) in {{ $slides->count() }}" :key="index">
-                                <div class="dot" 
-                                    @click="currentIndex = index" 
-                                    :class="{ 'active': currentIndex === index }"
-                                    @mouseenter="pause = true"
-                                    @mouseleave="pause = false">
-                                    <template x-if="currentIndex === index">
-                                        <span class="dot-progress" 
-                                            @animationend="currentIndex = (currentIndex + 1) % total"
-                                            :style="pause ? 'animation-play-state: paused' : 'animation-play-state: running'"></span>
+                                <div class="dot" @click="$store.slider.current = index"
+                                    :class="{ 'active': $store.slider.current === index }"
+                                    @mouseenter="$store.slider.pause = true" @mouseleave="$store.slider.pause = false">
+                                    <template x-if="$store.slider.current === index">
+                                        <span class="dot-progress"
+                                            @animationend="$store.slider.current = ($store.slider.current + 1) % $store.slider.total"
+                                            :style="$store.slider.pause ? 'animation-play-state: paused' : 'animation-play-state: running'"></span>
                                     </template>
                                 </div>
                             </template>
@@ -439,16 +475,12 @@
 
 @push('scripts')
     <script>
-        function heroSlider() {
-            return {
-                currentIndex: 0,
+        function initHeroSlider(total) {
+            Alpine.store('slider', {
+                current: 0,
                 pause: false,
-                total: {{ max(1, $slides->count()) }},
-                init() {
-                    // Để slider dựa hoàn toàn vào @animationend của thanh loading progress
-                    // vừa giúp đồng bộ đồ họa, vừa giải quyết triệt để lỗi khi ấn pause.
-                }
-            }
+                total: total,
+            });
         }
     </script>
 @endpush

@@ -20,7 +20,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/gioi-thieu', [PublicAboutController::class, 'index'])->name('about');
 Route::get('/san-pham', [PublicProductController::class, 'index'])->name('products.index');
 Route::get('/san-pham/{slug}', [PublicProductController::class, 'show'])->name('products.show');
-Route::get('/danh-muc/{slug}', [PublicCategoryController::class, 'show'])->name('categories.show');
+Route::get('/danh-muc/{category}', [PublicCategoryController::class, 'show'])->name('categories.show');
 
 // ── Auth + Profile (Breeze) ────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {

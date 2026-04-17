@@ -9,6 +9,10 @@ docker compose build nginx
 ```sh
 docker compose pull
 ```
+hoặc tự build
+```sh
+docker compose build app
+```
 
 # Update và restart
 
@@ -16,14 +20,7 @@ docker compose pull
 docker compose up -d
 ```
 
-## Cấp quyền cho docker_data
-
+# Update và build
 ```sh
-sudo chown -R 1000:1000 docker_data/
-```
-
-- chỉ chạy khi lệnh trên vẫn không hoạt động:
-
-```sh
-sudo chmod -R 777 docker_data/
+docker compose up -d --build
 ```

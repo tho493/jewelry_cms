@@ -542,8 +542,14 @@
                             <div class="product-card-body">
                                 <div class="product-card-cat">{{ $rel->category?->name }}</div>
                                 <div class="product-card-name">{{ $rel->name }}</div>
-                                <div class="product-card-price">{{ $rel->price ? number_format($rel->price) . 'đ' : 'Liên hệ' }}
+                                <div style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">
+                                    {{ $rel->product_code ? 'Mã SP: ' . $rel->product_code : ($rel->material ? 'Chất liệu: ' . $rel->material : '') }}
                                 </div>
+                                @if($rel->price)
+                                <div class="product-card-price">
+                                    {{ number_format($rel->price) . 'đ' }}
+                                </div>
+                                @endif
                             </div>
                         </a>
                     @endforeach

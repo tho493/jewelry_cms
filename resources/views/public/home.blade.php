@@ -198,7 +198,7 @@
                 inset: 0;
                 width: 100%;
                 height: 100%;
-                transition: opacity 1s ease;
+                transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             }
 
             .hero-mobile-bg img {
@@ -308,19 +308,51 @@
                 transform: scaleX(1);
             }
         }
+
+        /* ── Gold Dust Particles ─────────────────────────── */
+        #gold-dust-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1; /* Below content but above background */
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .gold-dust {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(201,168,76,0.2) 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float-dust linear infinite;
+            filter: blur(1px);
+        }
+
+        @keyframes float-dust {
+            0% {
+                transform: translateY(110vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; transform: translateY(90vh) scale(1); }
+            90% { opacity: 0.8; }
+            100% {
+                transform: translateY(-20vh) translateX(50px) scale(0.5);
+                opacity: 0;
+            }
+        }
     </style>
 @endpush
 
 @section('content')
 
-    <!-- Hero -->
     <section class="hero" x-data x-init="initHeroSlider({{ max(1, $slides->count()) }})">
 
-        <!-- Nền ảnh cho màn hình di động -->
+        <!-- Gold Dust -->
+        <div id="gold-dust-container"></div>
+
         <div class="hero-mobile-bg">
             @if($slides->count() > 0)
                 @foreach($slides as $index => $slide)
-                    <div class="mobile-slide" :style="{ opacity: $store.slider.current === {{ $index }} ? 1 : 0 }">
+                    <div class="mobile-slide" :style="{ transform: $store.slider.current === {{ $index }} ? 'scale(1)' : 'scale(1.05)', opacity: $store.slider.current === {{ $index }} ? 1 : 0, filter: $store.slider.current === {{ $index }} ? 'blur(0px)' : 'blur(10px)', zIndex: $store.slider.current === {{ $index }} ? 2 : 1 }">
                         <img src="{{ $slide->image_url }}" alt="Mobile Background">
                     </div>
                 @endforeach
@@ -360,8 +392,8 @@
                         <!-- Slider Items -->
                         @if($slides->count() > 0)
                             @foreach($slides as $index => $slide)
-                                <div style="position: absolute; inset: 0; width: 100%; height: 100%; transition: all 0.8s cubic-bezier(0.4,0,0.2,1);"
-                                    :style="{ opacity: $store.slider.current === {{ $index }} ? 1 : 0, transform: $store.slider.current === {{ $index }} ? 'scale(1)' : 'scale(1.1)', zIndex: $store.slider.current === {{ $index }} ? 2 : 1 }">
+                                <div style="position: absolute; inset: 0; width: 100%; height: 100%; transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);"
+                                    :style="{ transform: $store.slider.current === {{ $index }} ? 'scale(1)' : 'scale(1.05)', opacity: $store.slider.current === {{ $index }} ? 1 : 0, filter: $store.slider.current === {{ $index }} ? 'blur(0px)' : 'blur(10px)', zIndex: $store.slider.current === {{ $index }} ? 2 : 1 }">
                                     <img src="{{ $slide->image_url }}" alt="Slide" class="hero-img">
 
                                     @if($slide->caption)
@@ -452,9 +484,14 @@
                             <div class="product-card-body">
                                 <div class="product-card-cat">{{ $product->category?->name ?? 'Trang sức' }}</div>
                                 <div class="product-card-name">{{ $product->name }}</div>
-                                <div class="product-card-price">
-                                    {{ $product->price ? number_format($product->price) . 'đ' : 'Liên hệ' }}
+                                <div style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">
+                                    {{ $product->product_code ? 'Mã SP: ' . $product->product_code : ($product->material ? 'Chất liệu: ' . $product->material : '') }}
                                 </div>
+                                @if($product->price)
+                                    <div class="product-card-price">
+                                        {{ number_format($product->price) . 'đ' }}
+                                    </div>
+                                @endif
                             </div>
                         </a>
                     @endforeach
@@ -475,6 +512,31 @@
 
 @push('scripts')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initGoldDust();
+        });
+
+        function initGoldDust() {
+            const container = document.getElementById('gold-dust-container');
+            if(!container) return;
+            const particleCount = window.innerWidth < 768 ? 25 : 50;
+            
+            for(let i=0; i<particleCount; i++) {
+                let dust = document.createElement('div');
+                dust.className = 'gold-dust';
+                dust.style.left = Math.random() * 100 + 'vw';
+                
+                let size = Math.random() * 3 + 1;
+                dust.style.width = size + 'px';
+                dust.style.height = size + 'px';
+                
+                dust.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                dust.style.animationDelay = (Math.random() * -20) + 's';
+                
+                container.appendChild(dust);
+            }
+        }
+
         function initHeroSlider(total) {
             Alpine.store('slider', {
                 current: 0,

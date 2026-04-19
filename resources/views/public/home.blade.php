@@ -205,7 +205,7 @@
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
-                filter: brightness(0.3) contrast(1.1);
+                filter: brightness(0.5) contrast(1.15);
             }
         }
 
@@ -295,7 +295,7 @@
             width: 100%;
             background: var(--gold);
             transform-origin: left;
-            animation: dotProgress 4s linear forwards;
+            animation: dotProgress 2.8s linear forwards;
             z-index: 2;
         }
 
@@ -313,14 +313,15 @@
         #gold-dust-container {
             position: absolute;
             inset: 0;
-            z-index: 1; /* Below content but above background */
+            z-index: 1;
+            /* Below content but above background */
             pointer-events: none;
             overflow: hidden;
         }
 
         .gold-dust {
             position: absolute;
-            background: radial-gradient(circle, rgba(255,215,0,0.8) 0%, rgba(201,168,76,0.2) 100%);
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, rgba(201, 168, 76, 0.2) 100%);
             border-radius: 50%;
             pointer-events: none;
             animation: float-dust linear infinite;
@@ -332,8 +333,16 @@
                 transform: translateY(110vh) translateX(0) scale(0);
                 opacity: 0;
             }
-            10% { opacity: 1; transform: translateY(90vh) scale(1); }
-            90% { opacity: 0.8; }
+
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) scale(1);
+            }
+
+            90% {
+                opacity: 0.8;
+            }
+
             100% {
                 transform: translateY(-20vh) translateX(50px) scale(0.5);
                 opacity: 0;
@@ -352,7 +361,8 @@
         <div class="hero-mobile-bg">
             @if($slides->count() > 0)
                 @foreach($slides as $index => $slide)
-                    <div class="mobile-slide" :style="{ transform: $store.slider.current === {{ $index }} ? 'scale(1)' : 'scale(1.05)', opacity: $store.slider.current === {{ $index }} ? 1 : 0, filter: $store.slider.current === {{ $index }} ? 'blur(0px)' : 'blur(10px)', zIndex: $store.slider.current === {{ $index }} ? 2 : 1 }">
+                    <div class="mobile-slide"
+                        :style="{ transform: $store.slider.current === {{ $index }} ? 'scale(1)' : 'scale(1.05)', opacity: $store.slider.current === {{ $index }} ? 1 : 0, filter: $store.slider.current === {{ $index }} ? 'blur(0px)' : 'blur(10px)', zIndex: $store.slider.current === {{ $index }} ? 2 : 1 }">
                         <img src="{{ $slide->image_url }}" alt="Mobile Background">
                     </div>
                 @endforeach
@@ -512,27 +522,27 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initGoldDust();
         });
 
         function initGoldDust() {
             const container = document.getElementById('gold-dust-container');
-            if(!container) return;
+            if (!container) return;
             const particleCount = window.innerWidth < 768 ? 25 : 50;
-            
-            for(let i=0; i<particleCount; i++) {
+
+            for (let i = 0; i < particleCount; i++) {
                 let dust = document.createElement('div');
                 dust.className = 'gold-dust';
                 dust.style.left = Math.random() * 100 + 'vw';
-                
+
                 let size = Math.random() * 3 + 1;
                 dust.style.width = size + 'px';
                 dust.style.height = size + 'px';
-                
+
                 dust.style.animationDuration = (Math.random() * 15 + 10) + 's';
                 dust.style.animationDelay = (Math.random() * -20) + 's';
-                
+
                 container.appendChild(dust);
             }
         }

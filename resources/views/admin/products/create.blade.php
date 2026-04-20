@@ -180,7 +180,7 @@
         </div>
 
         {{-- Right column --}}
-        <div>
+        <div class="sticky-col">
             <div class="card" style="margin-bottom:20px">
                 <div class="card-header"><h3>Thuộc tính</h3></div>
                 <div class="card-body">

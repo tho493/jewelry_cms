@@ -277,8 +277,8 @@
                         {{-- Error message --}}
                         <div x-show="uploadError" x-cloak
                             style="background:rgba(224,82,82,0.12);border:1px solid rgba(224,82,82,0.3);
-                                                                        color:var(--danger);border-radius:8px;padding:10px 14px;
-                                                                        font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
+                                                                                color:var(--danger);border-radius:8px;padding:10px 14px;
+                                                                                font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:8px">
                             &#9888; <span x-text="uploadError"></span>
                             <button type="button" @click="uploadError=''"
                                 style="margin-left:auto;background:none;border:none;color:var(--danger);cursor:pointer">&#10005;</button>
@@ -291,8 +291,8 @@
                             {{-- Existing media (server-rendered) --}}
                             @foreach($product->media as $m)
                                 <div class="media-item" data-id="{{ $m->id }}" style="position:relative;border-radius:10px;overflow:hidden;
-                                                border:2px solid {{ $m->is_cover ? 'var(--gold)' : 'var(--border)' }};
-                                                background:var(--surface2)">
+                                                                border:2px solid {{ $m->is_cover ? 'var(--gold)' : 'var(--border)' }};
+                                                                background:var(--surface2)">
 
                                     {{-- Type badge --}}
                                     <div class="media-type-badge">{{ $m->type }}</div>
@@ -322,9 +322,9 @@
                                             <button type="button" onclick="setCover({{ $m->id }}, this)" class="btn btn-sm"
                                                 title="Đặt làm ảnh bìa"
                                                 style="flex:1;padding:4px;font-size:11px;
-                                                                                                                                                                       background:{{ $m->is_cover ? 'var(--gold)' : 'var(--surface)' }};
-                                                                                                                                                                       color:{{ $m->is_cover ? '#000' : 'var(--muted)' }};
-                                                                                                                                                                       border:1px solid var(--border)">&#9733;</button>
+                                                                                                                                                                                               background:{{ $m->is_cover ? 'var(--gold)' : 'var(--surface)' }};
+                                                                                                                                                                                               color:{{ $m->is_cover ? '#000' : 'var(--muted)' }};
+                                                                                                                                                                                               border:1px solid var(--border)">&#9733;</button>
                                         @endif
                                         <button type="button" onclick="deleteMedia({{ $m->id }}, this)"
                                             class="btn btn-danger btn-sm"
@@ -337,7 +337,7 @@
                             <template x-for="item in newMedia" :key="item.id">
                                 <div class="media-item" :data-id="item.id"
                                     style="position:relative;border-radius:10px;overflow:hidden;
-                                                                                border:2px solid var(--border);background:var(--surface2)">
+                                                                                        border:2px solid var(--border);background:var(--surface2)">
 
                                     <div class="media-type-badge" x-text="item.type"></div>
 
@@ -362,8 +362,8 @@
                                         <button type="button" @click="setCoverNew(item)" class="btn btn-sm"
                                             x-show="item.type === 'image'"
                                             style="flex:1;padding:4px;font-size:11px;
-                                                                                           background:var(--surface);color:var(--muted);
-                                                                                           border:1px solid var(--border)">&#9733;</button>
+                                                                                                   background:var(--surface);color:var(--muted);
+                                                                                                   border:1px solid var(--border)">&#9733;</button>
                                         <button type="button" @click="deleteMediaNew(item)" class="btn btn-danger btn-sm"
                                             style="flex:1;padding:4px;font-size:11px">&#10005;</button>
                                     </div>
@@ -430,14 +430,14 @@
 
                 <button type="submit" class="btn btn-primary"
                     style="width:100%;justify-content:center;margin-bottom:12px;padding:12px 18px;font-size:15px">
-                    &#128190; Lưu thay đổi
+                    Lưu thay đổi
                 </button>
 
                 {{-- Nút xóa: dùng form= attribute, KHÔNG lồng form trong form --}}
                 <button type="submit" form="delete-product-form" class="btn btn-danger"
                     style="width:100%;justify-content:center"
                     onclick="return confirm('Xóa sản phẩm này? Tất cả media cũng sẽ bị xóa!')">
-                    &#128465; Xóa sản phẩm
+                    Xóa sản phẩm
                 </button>
             </div>
 

@@ -1,7 +1,7 @@
 @extends('layouts.public')
 
-@section('title', 'Bộ sưu tập trang sức – ' . config('app.name'))
-@section('meta_description', 'Khám phá bộ sưu tập trang sức văn hóa Việt - Trung.')
+@section('title', __('home.title') . ' – ' . config('app.name'))
+@section('meta_description', __('home.meta_description'))
 
 @push('styles')
     <style>
@@ -418,7 +418,7 @@
                         @else
                             <div
                                 style="width: 100%; height: 100%; background: #222; display: flex; align-items: center; justify-content: center; color: #555;">
-                                Chưa có ảnh (hãy truy cập Admin để tải lên)
+                                {{ __('product.no_results') }}
                             </div>
                         @endif
 
@@ -459,7 +459,7 @@
         <section class="section-sm" style="border-bottom: 1px solid rgba(201,168,76,0.1)">
             <div class="container">
                 <div class="section-heading">
-                    <h2>Danh Mục Sản Phẩm</h2>
+                    <h2>{{ __('category.all') }}</h2>
                     <div class="gold-line"></div>
                 </div>
                 <div class="category-grid">
@@ -497,10 +497,10 @@
                                 @endif
                             </div>
                             <div class="product-card-body">
-                                <div class="product-card-cat">{{ $product->category?->name ?? 'Trang sức' }}</div>
+                                <div class="product-card-cat">{{ $product->category?->name }}</div>
                                 <div class="product-card-name">{{ $product->name }}</div>
                                 <div style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">
-                                    {{ $product->product_code ? 'Mã SP: ' . $product->product_code : ($product->material ? 'Chất liệu: ' . $product->material : '') }}
+                                    {{ $product->product_code ? __('product.code') . ': ' . $product->product_code : ($product->material ? __('product.material') . ': ' . $product->material : '') }}
                                 </div>
                                 @if($product->price)
                                     <div class="product-card-price">
@@ -513,11 +513,11 @@
                 </div>
 
                 <div style="text-align:center;margin-top:40px">
-                    <a href="{{ route('products.index') }}" class="btn btn-outline">Xem tất cả sản phẩm</a>
+                    <a href="{{ route('products.index') }}" class="btn btn-outline">{{ __('product.view_all') }}</a>
                 </div>
             @else
                 <div style="text-align:center;padding:80px 0;color:var(--muted)">
-                    <p>Sản phẩm sắp ra mắt. Hãy quay lại sau!</p>
+                    <p>{{ __('product.no_results') }}</p>
                 </div>
             @endif
         </div>

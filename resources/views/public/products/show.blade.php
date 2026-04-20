@@ -323,9 +323,9 @@
         <div class="container">
             <!-- Breadcrumb -->
             <nav class="breadcrumb">
-                <a href="{{ route('home') }}">Trang chủ</a>
+                <a href="{{ route('home') }}">{{ __('nav.home') }}</a>
                 <span class="breadcrumb-sep">/</span>
-                <a href="{{ route('products.index') }}">Sản phẩm</a>
+                <a href="{{ route('products.index') }}">{{ __('nav.products') }}</a>
                 @if($product->category)
                     <span class="breadcrumb-sep">/</span>
                     <a href="{{ route('categories.show', $product->category->slug) }}">{{ $product->category->name }}</a>
@@ -341,7 +341,7 @@
                         @if(($product->images->count() + $product->videos->count()) > 0)
                             <template x-if="currentType === 'image'">
                                 <div style="width:100%;height:100%;position:relative;cursor:zoom-in" @click="isZoomed = true"
-                                    title="Phóng to ảnh">
+                                    title="{{ __('product.zoom') }}">
                                     <img :src="current" id="main-img" alt="{{ $product->name }}">
                                     <!-- Zoom Icon Overlay -->
                                     <div
@@ -415,7 +415,7 @@
 
                 <!-- Info -->
                 <div>
-                    <div class="product-label">{{ $product->category?->name ?? 'Trang sức' }}</div>
+                    <div class="product-label">{{ $product->category?->name }}</div>
                     <h1 class="product-title">
                         {{ $product->name }}
                         @if($product->name_hantu)
@@ -439,27 +439,27 @@
                     <div class="product-meta">
                         @if($product->product_code)
                             <div class="product-meta-row">
-                                <span class="product-meta-label">Mã sản phẩm</span>
+                                <span class="product-meta-label">{{ __('product.code') }}</span>
                                 <span class="product-meta-value">{{ $product->product_code }}</span>
                             </div>
                         @endif
 
                         @if($product->main_character)
                             <div class="product-meta-row">
-                                <span class="product-meta-label">Chữ chủ đạo</span>
+                                <span class="product-meta-label">{{ __('product.main_character') }}</span>
                                 <span class="product-meta-value">{{ $product->main_character }}</span>
                             </div>
                         @endif
 
                         @if($product->material)
                             <div class="product-meta-row">
-                                <span class="product-meta-label">Chất liệu - Kỹ thuật</span>
+                                <span class="product-meta-label">{{ __('product.material_technique') }}</span>
                                 <span class="product-meta-value">{{ $product->material }}</span>
                             </div>
                         @endif
                         @if($product->category)
                             <div class="product-meta-row">
-                                <span class="product-meta-label">Danh mục</span>
+                                <span class="product-meta-label">{{ __('product.category_label') }}</span>
                                 <a href="{{ route('categories.show', $product->category->slug) }}" class="product-meta-value"
                                     style="color:var(--gold)">{{ $product->category->name }}</a>
                             </div>
@@ -469,7 +469,7 @@
                     @if($product->audios->count() > 0)
                         <div class="audio-container">
                             <p style="color: #c5a059; font-size: 0.9rem; margin-bottom: 8px;">
-                                <i class="fas fa-volume-up"></i> Thuyết minh sản phẩm:
+                                <i class="fas fa-volume-up"></i> {{ __('product.audio_description') }}
                             </p>
                             @foreach($product->audios as $audio)
                                 <div style="margin-bottom: 12px;">
@@ -479,7 +479,7 @@
                                     @endif
                                     <audio controls class="custom-audio" preload="metadata">
                                         <source src="{{ $audio->url }}" type="audio/mpeg">
-                                        Trình duyệt không hỗ trợ audio.
+                                        {{ __('product.audio_unsupported') }}
                                     </audio>
                                 </div>
                             @endforeach
@@ -492,7 +492,7 @@
                                     </a> -->
                     <a href="{{ route('products.index') }}" class="btn btn-outline"
                         style="width:100%;justify-content:center;font-size:14px">
-                        ← Xem thêm sản phẩm
+                        {{ __('product.view_more') }}
                     </a>
                 </div>
             </div>
@@ -503,17 +503,17 @@
                     style="max-width:800px; margin: 64px auto 0; padding-top: 48px; border-top: 1px solid rgba(255,255,255,0.06)">
 
                     @if($product->form_characteristics)
-                        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">Đặc điểm tạo hình</h2>
+                        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">{{ __('product.form_characteristics') }}</h2>
                         <div class="product-desc" style="margin-bottom:48px">{!! $product->form_characteristics !!}</div>
                     @endif
 
                     @if($product->cultural_meaning)
-                        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">Ý nghĩa văn hóa</h2>
+                        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">{{ __('product.cultural_meaning') }}</h2>
                         <div class="product-desc" style="margin-bottom:48px">{!! $product->cultural_meaning !!}</div>
                     @endif
 
                     @if($product->description)
-                        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">Mô tả sản phẩm</h2>
+                        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:24px">{{ __('product.description') }}</h2>
                         <div class="product-desc">{!! $product->description !!}</div>
                     @endif
                 </div>
@@ -526,7 +526,7 @@
         <section class="related-section">
             <div class="container">
                 <div class="section-heading">
-                    <h2>Sản phẩm liên quan</h2>
+                    <h2>{{ __('product.related') }}</h2>
                     <div class="gold-line"></div>
                 </div>
                 <div class="product-grid">
@@ -543,7 +543,7 @@
                                 <div class="product-card-cat">{{ $rel->category?->name }}</div>
                                 <div class="product-card-name">{{ $rel->name }}</div>
                                 <div style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">
-                                    {{ $rel->product_code ? 'Mã SP: ' . $rel->product_code : ($rel->material ? 'Chất liệu: ' . $rel->material : '') }}
+                                    {{ $rel->product_code ? __('product.code') . ': ' . $rel->product_code : ($rel->material ? __('product.material') . ': ' . $rel->material : '') }}
                                 </div>
                                 @if($rel->price)
                                 <div class="product-card-price">

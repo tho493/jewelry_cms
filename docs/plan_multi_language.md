@@ -1,71 +1,121 @@
-# Kế Hoạch Triển Khai Đa Ngôn Ngữ (Multi-Language) cho Jewelry CMS
+# Kế Hoạch Triển Khai Đa Ngôn Ngữ UI (Frontend Interface) cho Jewelry CMS
 
-Mục tiêu: Cho phép hệ thống quản trị (Admin) nhập liệu bằng nhiều ngôn ngữ (Tiếng Việt, Tiếng Anh) và người dùng (Frontend) có thể chuyển đổi ngôn ngữ truy cập nhưng vẫn đảm bảo tối ưu SEO đường dẫn (URL).
+Mục tiêu: Cho phép hệ thống quản trị (Admin) **tạo và quản lý danh sách ngôn ngữ động** để chuyển đổi trên Front-end. Người dùng xem website (Public Frontend) có thể chuyển đổi ngôn ngữ thông qua thẻ menu.
+Việc chuyển đổi ngôn ngữ **CHỈ ÁP DỤNG TRÊN GIAO DIỆN PUBLIC (Frontend)** đối với các chuỗi hiển thị tĩnh (thanh menu, nút bấm, tiêu đề footer, nhãn dán, vv...). 
+**LƯU Ý QUAN TRỌNG**: 
+- **Không áp dụng đa ngôn ngữ cho Admin**: Toàn bộ giao diện Admin và nội dung nhập liệu (Sản phẩm, Danh mục, Slider, About) đều chỉ dùng duy nhất 1 ngôn ngữ (ví dụ Tiếng Việt). Hoàn toàn không có tabs ngôn ngữ hay chuyển đổi ngôn ngữ ở trang quản trị CMS.
+- Đảm bảo tối ưu SEO đường dẫn (URL) qua các file cấu hình.
 
-Kế hoạch này không bao gồm cài đặt chi tiết mã nguồn, mà phác thảo đầy đủ quy trình các bước thao tác trên toàn bộ hệ thống.
+Kế hoạch này không bao gồm cài đặt chi tiết mã nguồn, mà phác thảo đầy đủ quy trình các bước thao tác trên hệ thống.
 
 ---
 
 ## 1. Công Cụ & Thư Viện Kiến Trúc (Tech Stack)
 
-Để quá trình thiết kế Đa Ngôn Ngữ sạch sẽ nhất và không cần phải nhân bản (duplicate) các dòng trong CSDL, chúng ta sẽ áp dụng các Package nổi bật sau đây của Laravel:
+Để quá trình thiết kế Đa Ngôn Ngữ sạch sẽ nhất:
 
-1. **`spatie/laravel-translatable`**: Xử lý nội dung **Dữ liệu động (Dynamic Data)** trong cở sở dữ liệu. Nó chuyển đổi các cột text thành kiểu dữ liệu `JSON` để lưu song song cả tiếng Việt lẫn tiếng Anh trên cùng 1 record (ví dụ: `{"vi": "Nhẫn ngọc", "en": "Jade Ring"}`).
-2. **`mcamara/laravel-localization`**: Giúp quản lý cấu trúc routing **URL chuẩn SEO**. Tự động chèn prefix mã ngôn ngữ (VD: `yousite.com/vi/san-pham` và `yousite.com/en/products`). Giải quyết bài toán SEO đa khu vực thẻ `<link rel="alternate" hreflang="x">`.
-3. **File `lang/vi.json` & `lang/en.json`**: Giải quyết các **Dữ liệu tĩnh (Static Strings)** trên giao diện: Footer, thanh menu "Trang chủ", nút bấm "Xem tất cả", v.v.
+1. **`mcamara/laravel-localization`**: Giúp quản lý cấu trúc routing **URL chuẩn SEO** trên Public Frontend. Tự động chèn prefix mã ngôn ngữ (VD: `yousite.com/vi/san-pham` và `yousite.com/en/products`). Giải quyết bài toán SEO đa khu vực thẻ `<link rel="alternate" hreflang="x">`.
+2. **Hệ thống Translation mặc định của Laravel (`lang/*.json` hoặc `lang/*/*.php`)**: Giải quyết các **Dữ liệu tĩnh (Static Strings)** trên giao diện Public: Footer, thanh menu "Trang chủ", các nút bấm "Xem tất cả", nhãn thông báo hệ thống, giỏ hàng, v.v.
 
----
-
-## 2. Giai Đoạn Thay Đổi Cấu Trúc Database (Migrations)
-
-Chúng ta cần tạo các file Migration để nâng cấp **thay đổi kiểu dữ liệu (data type)** cột từ `string/text` sang `json` cho các bảng cần dịch.
-
-### Những bảng cần thay đổi:
-- **`products`**: `name`, `slug`, `short_description`, `description`, `name_hantu`, `main_character`, `form_characteristics`, `cultural_meaning`, `material`, `seo_title`, `seo_description`.
-- **`categories`**: `name`, `slug`.
-- **`home_settings`**: `hero_label`, `hero_title_line1`, `hero_title_line2`, `hero_description`, `hero_btn_primary_text`, `hero_btn_secondary_text`, `featured_title`, `featured_subtitle`.
-- **`home_slides`**: `caption`.
-- **`abouts`**: `content`.
-
-> [!WARNING]  
-> Cần backup dữ liệu hiện tại trước. Sau đó dùng artisan command để loop qua từng record cũ và chuyển format từ dạng text thô sang dạng JSON `{ "vi": "giá trị cũ" }` để tránh mất dữ liệu.
+*(Lưu ý: Không sử dụng bất kỳ JSON translation data hay packages cho Database).*
 
 ---
 
-## 3. Giai Đoạn Nâng Cấp Models
+## 2. Quản Lý Danh Sách Giao Diện Ngôn Ngữ (Admin Language Setting)
 
-Với mọi Model tương ứng, ta tiến hành thao tác cấu hình:
+Thay vì hardcode danh sách ngôn ngữ (`vi`, `en`) vào file config, **Admin CMS là nơi duy nhất quản lý ngôn ngữ**. Hệ thống sẽ đọc danh sách ngôn ngữ từ database và tự động cấu hình ứng dụng (config) khi cần.
 
-- Thêm Trait `HasTranslations` do thư viện Spatie cung cấp.
-- Khai báo property `$translatable = ['cột_cần_dịch_1', 'cột_cần_dịch_2', ...]` để báo cho Laravel biết các biến này sẽ tự động phân giải tùy theo ngôn ngữ.
-- Đối với `slug` của Categories và Products, cấu hình lại chức năng auto-generate slug sinh ra 2 loại URL song song: Cả `slug-tieng-viet` lẫn `slug-english`.
+### 2.1. Bảng `languages` trong Database
+
+Tạo migration mới cho bảng quản lý ngôn ngữ (đã hoàn thiện):
+
+| Cột | Kiểu | Mô tả |
+|-----|------|---------|
+| `id` | `bigint` | Primary key |
+| `code` | `varchar(10)` | Mã ngôn ngữ ISO 639-1 (vd: `vi`, `en`, `zh`, `ja`) |
+| `name` | `varchar(100)` | Tên đầy đủ (vd: `Vietnamese`) |
+| `native_name` | `varchar(100)` | Tên bản ngữ (vd: `Tiếng Việt`) |
+| `flag_emoji` | `varchar(10)` | Icon lá cờ (vd: `🇻🇳`) |
+| `is_default` | `boolean` | Ngôn ngữ mặc định (chỉ 1 ngôn ngữ được phép) |
+| `is_active` | `boolean` | Bật/tắt hiển thị trên frontend switcher |
+| `sort_order` | `integer` | Thứ tự hiển thị trong dropdown |
+| `timestamps` | — | `created_at`, `updated_at` |
+
+### 2.2. Service Provider (LanguageServiceProvider)
+
+Boot ở thời điểm app khởi động (đã hoàn thiện một phần):
+1. Load danh sách ngôn ngữ active từ DB (có cache `Cache::rememberForever`).
+2. Tự động chèn mảng hỗ trợ ngôn ngữ vào `laravel-localization.supportedLocales`.
+3. Đặt `defaultLocale` là ngôn ngữ có `is_default = true`.
+4. Clear cache mỗi lần Admin thao tác Thêm/Sửa/Xóa cấu hình ngôn ngữ.
 
 ---
 
-## 4. Cải Tạo Giao Diện Admin Box (CMS)
+## 3. Quản Lý & Dịch Thuật Chuỗi Cứng (Static Strings UI)
 
-Tại khu vực Admin, người quản trị cần có khả năng điền Data cho nhiều ngôn ngữ khi Thêm/Sửa sản phẩm.
+Vì chúng ta chỉ thay đổi ngôn ngữ giao diện (như label, cấu trúc text fix cứng), cần áp dụng Laravel Localization JSON files:
 
-- **Thiết kế lại Form HTML**: Đối với mỗi trường hợp cần dịch (ví dụ: Tên sản phẩm), thay vì 1 khung input duy nhất, ta sẽ sử dụng cấu trúc **Tab (Tab Tiếng Việt | Tab Tiếng Anh)** hoặc làm input có đính kèm icon lá cờ 🇻🇳/🇬🇧.
-- **Form Request Validation**: Cập nhật logic để validate mảng dữ liệu. Thay vì xác thực field `name`, ta cần xác thực qua cú pháp `name.vi` (Yêu cầu bắt buộc) và `name.en` (Có thể tùy chọn nếu admin chưa có nội dung tiếng Anh ngay).
+- Thay thế tất cả chuỗi văn bản tĩnh ở **Frontend (Trang chủ, Chi tiết SP, Giỏ hàng, Footer)** sử dụng helper `__()`. Ví dụ:
+  Thay vì `<button>Thêm vào giỏ</button>`
+  Ta viết: `<button>{{ __('Thêm vào giỏ') }}</button>`
+- Cung cấp các file ngôn ngữ như `/lang/vi.json` và `/lang/en.json` chứa các key-value map để hệ thống nạp tự động vào Frontend.
+
+*(Phần này Admin hiện tại có thể không cần chỉnh sửa trực tiếp trên CMS mà can thiệp thẳng vào hệ thống JSON file, hoặc tương lai có thể làm Module "Translation Manager" nếu người dùng cần sửa).*
 
 ---
 
-## 5. Nâng Cấp Giao Diện Public (Frontend) và SEO
+## 4. Tích hợp Giao Diện Public (Frontend) và Chuẩn Tối Ưu SEO
 
-Trang phục vụ khách hàng cuối sẽ trải qua các bước tinh chỉnh lớn:
+Trang phục vụ khách hàng cuối sử dụng package điều phối đường dẫn:
 
-- **Language Switcher (Dropdown đổi ngôn ngữ):** Bổ sung nút bấm trên thanh Menu (Header) đại diện cho ngôn ngữ hiện tại và list chọn để khách hàng đổi sang tiếng Anh.
-- **Routing URL Group:** Chuyển toàn bộ các route hiển thị của Public (như `/san-pham`, `/gioi-thieu`) bọc vào trong group của thư viện `laravel-localization`. Điều này sẽ giúp tự động sinh ra các tiền tố `/vi/` hoặc `/en/`.
-- **Cập nhật Blade View**: Các chữ cứng (Mã SP:, Xem thêm:, Liện hệ:) bọc với helper function của Laravel `__()` (vd: `__('Code')`).
-- **SEO Thuận tiện:** Thư viện sẽ hỗ trợ sinh các cụm cấu trúc siêu dữ liệu `<link rel="alternate" hreflang="en" href="domain/en">` vào thẻ Head một cách tự nhiên.
+- **Routing URL Group:** Chuyển toàn bộ các route hiển thị của Public (Web) bọc vào trong middleware group `['localize', 'localeSessionRedirect', 'localizationRedirect']` của thư viện `laravel-localization`.
+- **Phản hồi linh hoạt:** Thư viện sẽ sinh `<link rel="alternate" hreflang="...">` vào thẻ `<head>` một cách thông minh, tối ưu SEO.
 
-> [!TIP]  
-> Do kiến trúc Spatie cực kì thông minh, đoạn mã cũ ngoài views như `{{ $product->name }}` gần như sẽ KHÔNG cần phải sửa đổi gì, thư viện tự lo việc nhận diện khách đang view `en` thì lấy `tên tiếng Anh`, khách view `vi` thì tự nhận `tên tiếng Việt` cho field đó. Rất an toàn và tiết kiệm thời gian.
+---
 
-## 6. Lộ Trình Chạy (Timeline Ước Tính)
+## 5. Lựa Chọn Ngôn Ngữ Ưu Tiên và Dropdown Chuyển Đổi (Language Switcher)
 
-- **Bước 1**: Cấu hình `composer`, config và Localization tĩnh (15%). 
-- **Bước 2**: Thực thi Migration DB an toàn + update Models (25%). 
-- **Bước 3**: Thi công cập nhật giao diện và Controller phía Admin cho các Form nhập liệu (40%).
-- **Bước 4**: Tích hợp Frontend Switcher URL, Test Route và Hoàn thiện (20%).
+Ngôn ngữ ưu tiên quyết định giao diện hiển thị cho người xem:
+
+### 5.1. Cơ Chế Bắt URL/Cookie
+
+Áp dụng cơ chế ưu tiên đã tích hợp sẵn của package:
+1. Xét qua **URL Prefix** (`/vi/`, `/en/`) -> Quyết định locale tức thì.
+2. Kiểm tra Session hoặc Cookie.
+3. Fallback đọc `Accept-Language` của Browser.
+4. Fallback cuối cùng là ngôn ngữ `is_default` được cấu hình trong bảng `languages`.
+
+### 5.2. Giao Diện Language Switcher (Dropdown)
+
+Thiết kế component chọn ngôn ngữ hiển thị trên **Thanh Menu Header (Frontend)**:
+- Lặp qua mảng `$activeLanguages` được cung cấp mặc định.
+- Khi người dùng click chọn: Redirect lại đúng đường dẫn hiện tại nhưng thay đổi prefix (Sử dụng hàm helper `LaravelLocalization::getLocalizedURL($langCode)`).
+
+Ví dụ cấu trúc:
+```blade
+<div class="lang-switcher">
+    @foreach($activeLanguages as $lang)
+        <a href="{{ LaravelLocalization::getLocalizedURL($lang->code) }}"
+           class="{{ app()->getLocale() === $lang->code ? 'active' : '' }}">
+            {{ $lang->flag_emoji }} {{ strtoupper($lang->code) }}
+        </a>
+    @endforeach
+</div>
+```
+
+---
+
+## 6. Lộ Trình Triển Khai (Timeline Cập Nhật Lại)
+
+- [x] **Bước 1**: Tạo cấu trúc DB `languages` và model quản trị ngôn ngữ.
+- [x] **Bước 2**: Code Web Admin khu vực quản trị Ngôn Ngữ, Cấu hình Sync Provide cache (`LanguageServiceProvider`).
+- [x] **Bước 3**: (Không cần Undo) Xác nhận các Model không sử dụng `spatie/laravel-translatable`, Admin UI luôn là 1 ngôn ngữ độc lập.
+- [x] **Bước 4**: Bọc Middleware đa ngôn ngữ cho toàn bộ Route ở giao diện Frontend Public (`localeSessionRedirect`, `localizationRedirect`, `localeViewPath`).
+- [x] **Bước 5**: Thêm bộ Dropdown "Language Switcher" vào Public Header và Mobile Nav (hiển thị khi có ≥ 2 ngôn ngữ active).
+- [x] **Bước 6**: Thay thế toàn bộ mã code chữ fix cứng trên các file Blade Frontend qua Helper `__()` và tổ chức file `lang/vi.json` và `lang/en.json`.
+  - `layouts/public.blade.php`: splash tagline, nav, footer, hreflang SEO
+  - `public/home.blade.php`: title, meta\_description
+  - `public/products/index.blade.php`: title, meta\_description, filter labels
+  - `public/products/show.blade.php`: breadcrumb, meta labels, audio, buttons
+  - `public/about/index.blade.php`: title, fallback texts, team heading
+  - `public/categories/show.blade.php`: breadcrumb, count text, empty state, contact label

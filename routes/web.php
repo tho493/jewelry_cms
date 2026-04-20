@@ -16,11 +16,16 @@ use App\Http\Controllers\Public\AboutController as PublicAboutController;
 use Illuminate\Support\Facades\Route;
 
 // ── Public Routes ──────────────────────────────────────────────────────────
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/gioi-thieu', [PublicAboutController::class, 'index'])->name('about');
-Route::get('/san-pham', [PublicProductController::class, 'index'])->name('products.index');
-Route::get('/san-pham/{slug}', [PublicProductController::class, 'show'])->name('products.show');
-Route::get('/danh-muc/{category}', [PublicCategoryController::class, 'show'])->name('categories.show');
+Route::group([
+    'prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath'],
+], function () {
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/gioi-thieu', [PublicAboutController::class, 'index'])->name('about');
+    Route::get('/san-pham', [PublicProductController::class, 'index'])->name('products.index');
+    Route::get('/san-pham/{slug}', [PublicProductController::class, 'show'])->name('products.show');
+    Route::get('/danh-muc/{category}', [PublicCategoryController::class, 'show'])->name('categories.show');
+});
 
 // ── Auth + Profile (Breeze) ────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
@@ -29,7 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 // ── Admin Routes ───────────────────────────────────────────────────────────
 Route::prefix('admin')
@@ -42,6 +47,11 @@ Route::prefix('admin')
 
         // Profile
         Route::get('profile', [AdminProfileController::class, 'edit'])->name('profile');
+
+        // Languages
+        Route::patch('languages/{language}/set-default', [\App\Http\Controllers\Admin\LanguageController::class, 'setDefault'])->name('languages.set_default');
+        Route::patch('languages/{language}/toggle-active', [\App\Http\Controllers\Admin\LanguageController::class, 'toggleActive'])->name('languages.toggle_active');
+        Route::resource('languages', \App\Http\Controllers\Admin\LanguageController::class)->except('show');
 
         // Products CRUD
         Route::resource('products', AdminProductController::class);

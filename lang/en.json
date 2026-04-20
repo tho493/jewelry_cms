@@ -1,0 +1,67 @@
+{
+    "nav.home": "Home",
+    "nav.about": "About",
+    "nav.products": "Products",
+
+    "footer.description": "This website aggregates product research results in a visual format. Serves reporting, exhibitions, presentations and data digitization.",
+    "footer.system": "System",
+    "footer.about_us": "About Us",
+    "footer.all_products": "All Products",
+    "footer.contact": "Contact",
+    "footer.location": "Hanoi, Vietnam",
+    "footer.rights": "All rights reserved.",
+
+    "product.view_all": "View All",
+    "product.view_detail": "View Detail",
+    "product.featured": "Featured Products",
+    "product.all": "Product Catalog",
+    "product.no_results": "No products found.",
+    "product.back_to_list": "Back to List",
+    "product.code": "Product Code",
+    "product.material": "Material",
+    "product.category": "Category",
+    "product.name_hantu": "Chinese Name",
+
+    "category.all": "All Categories",
+    "category.products_in": "Products in Category",
+
+    "product.zoom": "Zoom Image",
+    "product.main_character": "Main Character",
+    "product.material_technique": "Material & Technique",
+    "product.category_label" : "Category",
+    "product.audio_description": "Audio Description:",
+    "product.audio_unsupported": "Your browser does not support audio elements.",
+    "product.view_more": "← View More Products",
+    "product.form_characteristics": "Form Characteristics",
+    "product.cultural_meaning": "Cultural Meaning",
+    "product.description": "Product Description",
+    "product.related": "Related Products",
+
+    "filter.all_materials": "All Materials",
+    "filter.sort_newest": "Newest",
+    "filter.sort_price_asc": "Price: Low to High",
+    "filter.sort_price_desc": "Price: High to Low",
+
+    "search.placeholder": "Search products...",
+    "search.no_results": "No matching results.",
+    "search.button": "Search",
+    "search.clear": "Clear Filters",
+    "search.try_again": "Try changing your filters or search keywords.",
+
+    "contact.title": "Contact",
+    "about.title": "About",
+    "about.default_title": "About the Project",
+    "about.no_content": "No introduction available yet.",
+    "about.team_heading": "Project Team",
+
+    "category.products_count": "products",
+    "category.empty": "This category has no products yet.",
+    "category.view_all": "View All Products",
+    "category.contact": "Contact",
+
+    "home.title": "Jewelry Collection",
+    "home.meta_description": "Explore our Vietnamese - Chinese cultural jewelry collection.",
+    "products.title": "Jewelry Products",
+    "products.meta_description": "Explore our full jewelry collection: rings, necklaces, bracelets, earrings and more.",
+    "splash.tagline": "Jewelry Collection • Chinese - Vietnamese"
+}

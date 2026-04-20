@@ -1,0 +1,67 @@
+{
+    "nav.home": "Trang chủ",
+    "nav.about": "Giới thiệu",
+    "nav.products": "Sản phẩm",
+
+    "footer.description": "Website này dùng để tổng hợp kết quả nghiên cứu sản phẩm dưới dạng trực quan. Phục vụ báo cáo, trưng bày, thuyết trình và số hóa dữ liệu.",
+    "footer.system": "Hệ thống",
+    "footer.about_us": "Về chúng tôi",
+    "footer.all_products": "Tất cả sản phẩm",
+    "footer.contact": "Liên hệ",
+    "footer.location": "Hà Nội, Việt Nam",
+    "footer.rights": "Bảo lưu mọi quyền.",
+
+    "product.view_all": "Xem tất cả",
+    "product.view_detail": "Xem chi tiết",
+    "product.featured": "Sản phẩm nổi bật",
+    "product.all": "Danh sách sản phẩm",
+    "product.no_results": "Không tìm thấy sản phẩm nào.",
+    "product.back_to_list": "Trở về danh sách",
+    "product.code": "Mã SP",
+    "product.material": "Chất liệu",
+    "product.category": "Danh mục",
+    "product.name_hantu": "Tên Hán tự",
+
+    "category.all": "Tất cả danh mục",
+    "category.products_in": "Sản phẩm trong danh mục",
+
+    "product.zoom": "Phóng to ảnh",
+    "product.main_character": "Chữ chủ đạo",
+    "product.material_technique": "Chất liệu - Kỹ thuật",
+    "product.category_label" : "Danh mục",
+    "product.audio_description": "Thuyết minh sản phẩm:",
+    "product.audio_unsupported": "Trình duyệt không hỗ trợ audio.",
+    "product.view_more": "← Xem thêm sản phẩm",
+    "product.form_characteristics": "Đặc điểm tạo hình",
+    "product.cultural_meaning": "Ý nghĩa văn hóa",
+    "product.description": "Mô tả sản phẩm",
+    "product.related": "Sản phẩm liên quan",
+
+    "filter.all_materials": "Tất cả chất liệu",
+    "filter.sort_newest": "Mới nhất",
+    "filter.sort_price_asc": "Giá tăng dần",
+    "filter.sort_price_desc": "Giá giảm dần",
+
+    "search.placeholder": "Tìm kiếm sản phẩm...",
+    "search.no_results": "Không có kết quả phù hợp.",
+    "search.button": "Tìm kiếm",
+    "search.clear": "Xóa bộ lọc",
+    "search.try_again": "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm.",
+
+    "contact.title": "Liên hệ",
+    "about.title": "Giới thiệu",
+    "about.default_title": "Giới thiệu về Dự án",
+    "about.no_content": "Chưa có thông tin giới thiệu.",
+    "about.team_heading": "Đội Ngũ Dự Án",
+
+    "category.products_count": "sản phẩm",
+    "category.empty": "Danh mục này chưa có sản phẩm.",
+    "category.view_all": "Xem tất cả sản phẩm",
+    "category.contact": "Liên hệ",
+
+    "home.title": "Bộ sưu tập trang sức",
+    "home.meta_description": "Khám phá bộ sưu tập trang sức văn hóa Việt - Trung.",
+    "products.title": "Sản phẩm trang sức",
+    "products.meta_description": "Khám phá toàn bộ bộ sưu tập trang sức: nhẫn, dây chuyền, vòng tay, bông tai cao cấp.",
+    "splash.tagline": "Bộ sưu tập trang sức • Hán - Việt"
+}

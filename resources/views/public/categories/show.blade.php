@@ -1,14 +1,14 @@
 @extends('layouts.public')
 
 @section('title', $category->name . ' – ' . config('app.name'))
-@section('meta_description', $category->description ?: 'Sản phẩm ' . $category->name . ' cao cấp tại ' . config('app.name'))
+@section('meta_description', $category->description ?: __('nav.products') . ' ' . $category->name . ' – ' . config('app.name'))
 
 @section('content')
 
     <div style="padding: 56px 0;">
         <div class="container">
             <div style="margin-bottom:40px">
-                <a href="{{ route('home') }}" style="color:var(--muted);font-size:13px">Trang chủ</a>
+                <a href="{{ route('home') }}" style="color:var(--muted);font-size:13px">{{ __('nav.home') }}</a>
                 <span style="color:rgba(255,255,255,0.2);margin:0 6px">/</span>
                 <span style="color:var(--gold);font-size:13px">{{ $category->name }}</span>
             </div>
@@ -18,7 +18,7 @@
                 @if($category->description)
                     <p style="color:var(--muted);margin-top:8px">{{ $category->description }}</p>
                 @endif
-                <p style="color:var(--muted);font-size:13px;margin-top:6px">{{ $products->total() }} sản phẩm</p>
+                <p style="color:var(--muted);font-size:13px;margin-top:6px">{{ $products->total() }} {{ __('category.products_count') }}</p>
             </div>
 
             @if($products->count() > 0)
@@ -35,7 +35,7 @@
                             <div class="product-card-body">
                                 <div class="product-card-name">{{ $product->name }}</div>
                                 <div class="product-card-price">
-                                    {{ $product->price ? number_format($product->price) . 'đ' : 'Liên hệ' }}</div>
+                                    {{ $product->price ? number_format($product->price) . 'đ' : __('category.contact') }}</div>
                             </div>
                         </a>
                     @endforeach
@@ -48,9 +48,8 @@
                 @endif
             @else
                 <div style="text-align:center;padding:80px 0;color:var(--muted)">
-                    <p>Danh mục này chưa có sản phẩm.</p>
-                    <a href="{{ route('products.index') }}" class="btn btn-outline" style="margin-top:20px">Xem tất cả sản
-                        phẩm</a>
+                    <p>{{ __('category.empty') }}</p>
+                    <a href="{{ route('products.index') }}" class="btn btn-outline" style="margin-top:20px">{{ __('category.view_all') }}</a>
                 </div>
             @endif
         </div>

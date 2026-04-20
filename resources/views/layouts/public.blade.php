@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
@@ -12,6 +12,14 @@
     <meta property="og:description" content="@yield('og_description', 'Trang sức cao cấp')">
     <meta property="og:image" content="@yield('og_image', '')">
     <meta property="og:type" content="website">
+
+    <!-- Hreflang SEO -->
+    @foreach($activeLanguages ?? [] as $lang)
+        <link rel="alternate" hreflang="{{ $lang->code }}"
+            href="{{ LaravelLocalization::getLocalizedURL($lang->code, null, [], true) }}">
+    @endforeach
+    <link rel="alternate" hreflang="x-default"
+        href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getDefaultLocale(), null, [], true) }}">
 
     <!-- Google Fonts -->
     <link
@@ -104,6 +112,66 @@
             display: flex;
             align-items: center;
             gap: 14px;
+        }
+
+        /* ── Language Switcher ───────────────────────── */
+        .lang-switcher {
+            position: relative;
+        }
+
+        .lang-switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: transparent;
+            border: 1px solid rgba(201, 168, 76, 0.3);
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lang-switcher-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .lang-switcher-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #1a1a1a;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-width: 140px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 200;
+        }
+
+        .lang-switcher-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--muted);
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .lang-switcher-dropdown a:hover {
+            background: rgba(201, 168, 76, 0.08);
+            color: var(--text);
+        }
+
+        .lang-switcher-dropdown a.current {
+            color: var(--gold);
+            font-weight: 600;
         }
 
         .mobile-menu-btn {
@@ -634,7 +702,7 @@
 
         <!-- Brand -->
         <div class="splash-logo">{{ config('app.name') }}</div>
-        <div class="splash-tagline">Bộ sưu tập trang sức &bull; Hán - Việt</div>
+        <div class="splash-tagline">{{ __('splash.tagline') }}</div>
 
         <!-- Loading bar -->
         <div class="splash-bar">
@@ -649,15 +717,44 @@
                 {{ config('app.name') }}
             </a>
             <nav class="nav">
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
-                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">Giới thiệu</a>
+                <a href="{{ route('home') }}"
+                    class="{{ request()->routeIs('home') ? 'active' : '' }}">{{ __('nav.home') }}</a>
+                <a href="{{ route('about') }}"
+                    class="{{ request()->routeIs('about') ? 'active' : '' }}">{{ __('nav.about') }}</a>
                 <a href="{{ route('products.index') }}"
-                    class="{{ request()->routeIs('products*') ? 'active' : '' }}">Sản phẩm</a>
+                    class="{{ request()->routeIs('products*') ? 'active' : '' }}">{{ __('nav.products') }}</a>
             </nav>
             <div class="header-actions">
                 @auth
                     <a href="{{ route('admin.dashboard') }}" style="font-size:12px;color:var(--gold)">Admin</a>
                 @endauth
+
+                {{-- Language Switcher --}}
+                @php
+                    $languages = LaravelLocalization::getSupportedLocales();
+                    $current = LaravelLocalization::getCurrentLocale();
+                @endphp
+
+                <div class="lang-switcher" x-data="{ open: false }">
+
+                    <button class="lang-switcher-btn" @click="open = !open" @click.away="open = false">
+
+                        <span>
+                            {{ strtoupper($current) }}
+                        </span>
+                    </button>
+
+                    <div class="lang-switcher-dropdown" x-show="open" style="display:none">
+
+                        @foreach($languages as $code => $lang)
+                            <a href="{{ LaravelLocalization::getLocalizedURL($code) }}"
+                                class="{{ $current === $code ? 'current' : '' }}">
+
+                                {{ $lang['native'] ?? $lang['name'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
 
                 <button type="button" class="mobile-menu-btn" @click="mobileMenuOpen = !mobileMenuOpen"
                     aria-label="Toggle menu">
@@ -678,10 +775,23 @@
         <!-- Mobile Nav -->
         <div class="mobile-nav" x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" style="display: none;"
             x-transition>
-            <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'active' : '' }}">Trang chủ</a>
-            <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'active' : '' }}">Giới thiệu</a>
-            <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products*') ? 'active' : '' }}">Sản
-                phẩm</a>
+            <a href="{{ route('home') }}"
+                class="{{ request()->routeIs('home') ? 'active' : '' }}">{{ __('nav.home') }}</a>
+            <a href="{{ route('about') }}"
+                class="{{ request()->routeIs('about') ? 'active' : '' }}">{{ __('nav.about') }}</a>
+            <a href="{{ route('products.index') }}"
+                class="{{ request()->routeIs('products*') ? 'active' : '' }}">{{ __('nav.products') }}</a>
+            @if(isset($activeLanguages) && $activeLanguages->count() > 1)
+                <div
+                    style="padding: 14px 0; border-top: 1px solid rgba(255,255,255,0.05); display:flex; gap:10px; flex-wrap:wrap;">
+                    @foreach($activeLanguages as $lang)
+                        <a href="{{ LaravelLocalization::getLocalizedURL($lang->code) }}"
+                            style="padding:0; border:none; {{ app()->getLocale() === $lang->code ? 'color:var(--gold)' : '' }}">
+                            {{ $lang->flag_emoji }} {{ $lang->native_name }}
+                        </a>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </header>
 
@@ -694,25 +804,24 @@
             <div class="footer-grid">
                 <div class="footer-brand">
                     <div class="logo">{{ config('app.name') }}</div>
-                    <p>Website này dùng để tổng hợp kết quả nghiên cứu sản phẩm dưới dạng trực quan. Phục vụ báo cáo,
-                        trưng bày, thuyết trình và số hóa học dữ liệu.</p>
+                    <p>{{ __('footer.description') }}</p>
                 </div>
                 <div class="footer-col">
-                    <h4>Hệ thống</h4>
-                    <a href="{{ route('home') }}">Trang chủ</a>
-                    <a href="{{ route('about') }}">Về chúng tôi</a>
-                    <a href="{{ route('products.index') }}">Tất cả sản phẩm</a>
+                    <h4>{{ __('footer.system') }}</h4>
+                    <a href="{{ route('home') }}">{{ __('nav.home') }}</a>
+                    <a href="{{ route('about') }}">{{ __('footer.about_us') }}</a>
+                    <a href="{{ route('products.index') }}">{{ __('footer.all_products') }}</a>
                 </div>
                 <div class="footer-col">
-                    <h4>Liên hệ</h4>
+                    <h4>{{ __('footer.contact') }}</h4>
                     <a href="#">chitho040903@gmail.com</a>
-                    <a href="#">Hà Nội, Việt Nam</a>
+                    <a href="#">{{ __('footer.location') }}</a>
                 </div>
             </div>
             <hr class="divider">
             <div class="footer-bottom">
-                <p>© 2026 <a href="https://github.com/tho493" style="color: white">tho493</a>. Bảo lưu mọi
-                    quyền.</p>
+                <p>© 2026 <a href="https://github.com/tho493" style="color: white">tho493</a>. {{ __('footer.rights') }}
+                </p>
             </div>
         </div>
     </footer>

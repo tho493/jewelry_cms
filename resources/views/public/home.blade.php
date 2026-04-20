@@ -77,10 +77,11 @@
         }
 
         .hero-title span {
+            font-size: clamp(48px, 8vw, 84px);
             display: block;
             font-style: italic;
             color: var(--gold);
-            margin-left: 60px;
+            /* margin-left: 60px; */
             position: relative;
         }
 
@@ -457,6 +458,10 @@
     @if($categories->count() > 0)
         <section class="section-sm" style="border-bottom: 1px solid rgba(201,168,76,0.1)">
             <div class="container">
+                <div class="section-heading">
+                    <h2>Danh Mục Sản Phẩm</h2>
+                    <div class="gold-line"></div>
+                </div>
                 <div class="category-grid">
                     @foreach($categories as $cat)
                         <a href="{{ route('categories.show', $cat->slug) }}" class="cat-chip">

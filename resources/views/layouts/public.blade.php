@@ -702,13 +702,11 @@
                     <a href="{{ route('home') }}">Trang chủ</a>
                     <a href="{{ route('about') }}">Về chúng tôi</a>
                     <a href="{{ route('products.index') }}">Tất cả sản phẩm</a>
-                    <a href="{{ route('products.index') }}?danh_muc=nhan">Nhẫn</a>
                 </div>
                 <div class="footer-col">
                     <h4>Liên hệ</h4>
                     <a href="#">chitho040903@gmail.com</a>
-                    <!-- <a href="#">0896505169</a> -->
-                    <a href="#">Hải Phòng, Việt Nam</a>
+                    <a href="#">Hà Nội, Việt Nam</a>
                 </div>
             </div>
             <hr class="divider">

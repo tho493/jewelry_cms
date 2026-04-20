@@ -480,8 +480,13 @@
     <section class="section" id="featured">
         <div class="container">
             <div class="section-heading">
-                <h2>{{ $setting->featured_title }}</h2>
-                <p>{{ $setting->featured_subtitle }}</p>
+                @if(app()->getLocale() == 'vi')
+                    <h2>{{ $setting->featured_title }}</h2>
+                    <p>{{ $setting->featured_subtitle }}</p>
+                @else
+                    <h2>{{ __('product.featured_title') }}</h2>
+                    <p>{{ __('product.featured_subtitle') }}</p>
+                @endif
                 <div class="gold-line"></div>
             </div>
 

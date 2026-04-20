@@ -36,6 +36,8 @@
     "product.cultural_meaning": "Cultural Meaning",
     "product.description": "Product Description",
     "product.related": "Related Products",
+    "product.featured_title": "Featured Products",
+    "product.featured_subtitle": "Most Popular Designs",
 
     "filter.all_materials": "All Materials",
     "filter.sort_newest": "Newest",

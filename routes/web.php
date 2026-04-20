@@ -48,11 +48,6 @@ Route::prefix('admin')
         // Profile
         Route::get('profile', [AdminProfileController::class, 'edit'])->name('profile');
 
-        // Languages
-        Route::patch('languages/{language}/set-default', [\App\Http\Controllers\Admin\LanguageController::class, 'setDefault'])->name('languages.set_default');
-        Route::patch('languages/{language}/toggle-active', [\App\Http\Controllers\Admin\LanguageController::class, 'toggleActive'])->name('languages.toggle_active');
-        Route::resource('languages', \App\Http\Controllers\Admin\LanguageController::class)->except('show');
-
         // Products CRUD
         Route::resource('products', AdminProductController::class);
 

@@ -504,6 +504,7 @@
                             <div class="product-card-body">
                                 <div class="product-card-cat">{{ $product->category?->name }}</div>
                                 <div class="product-card-name">{{ $product->name }}</div>
+                                <div class="product-card-name">{{ $product->name_hantu }}</div>
                                 <div style="font-size: 13px; color: var(--muted); margin-bottom: 4px;">
                                     {{ $product->product_code ? __('product.code') . ': ' . $product->product_code : ($product->material ? __('product.material') . ': ' . $product->material : '') }}
                                 </div>

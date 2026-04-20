@@ -65,6 +65,7 @@
                             <div class="product-card-body">
                                 <div class="product-card-cat">{{ $product->category?->name }}</div>
                                 <div class="product-card-name">{{ $product->name }}</div>
+                                <div class="product-card-name">{{ $product->name_hantu }}</div>
                                 @if($product->short_description)
                                     <p style="font-size:13px;color:var(--muted);margin:6px 0 10px;line-height:1.5">
                                         {{ Str::limit($product->short_description, 80) }}</p>

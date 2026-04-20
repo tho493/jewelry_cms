@@ -50,7 +50,11 @@ php artisan migrate --force --no-interaction || echo "⚠️  Migration warning 
 echo "Creating storage symlink..."
 php artisan storage:link --force 2>/dev/null || true
 
-# ── 5. Seed only if DB is empty (first deploy) ───────────────────
+# --- 5. Clear cache...
+echo "Clearing cache..."
+php artisan optimize:clear
+
+# ── 6. Seed only if DB is empty (first deploy) ───────────────────
 USER_COUNT=$(php artisan tinker --execute="echo App\Models\User::count();" 2>/dev/null | tail -1 || echo "0")
 if [ "$USER_COUNT" = "0" ]; then
     echo "Seeding database (first deploy)..."

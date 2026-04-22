@@ -23,43 +23,32 @@ rm -f bootstrap/cache/config.php
 rm -f bootstrap/cache/routes-*.php
 rm -f bootstrap/cache/events.php
 
-# ── 1. Wait for MySQL (defensive, compose health check is primary) ──
+# ── Wait for MySQL (defensive, compose health check is primary) ──
 until php -r "new PDO('mysql:host=${DB_HOST};port=${DB_PORT};dbname=${DB_DATABASE}', '${DB_USERNAME}', '${DB_PASSWORD}');" 2>/dev/null; do
     echo "Waiting for MySQL at ${DB_HOST}:${DB_PORT}..."
     sleep 2
 done
 echo "MySQL connected."
 
-# ── 2. Cache config / routes / views ────────────────────────────
-# package:discover chạy tự động trong config:cache (production)
-if [ "${APP_ENV}" = "production" ]; then
-    echo "Caching config, routes, views..."
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
-else
-    echo "Running package:discover..."
-    php artisan package:discover --ansi 2>/dev/null || true
-fi
 
-# ── 3. Run migrations ────────────────────────────────────────────
+# ── Run migrations ────────────────────────────────────────────
 echo "Running migrations..."
 php artisan migrate --force --no-interaction || echo "⚠️  Migration warning (non-fatal)"
 
-# ── 4. Create storage symlink ────────────────────────────────────
+# ── Create storage symlink ────────────────────────────────────
 echo "Creating storage symlink..."
 php artisan storage:link --force 2>/dev/null || true
 
-# --- 5. Clear cache...
-echo "Clearing cache..."
-php artisan optimize:clear
-
-# ── 6. Seed only if DB is empty (first deploy) ───────────────────
+# ── Seed only if DB is empty (first deploy) ───────────────────
 USER_COUNT=$(php artisan tinker --execute="echo App\Models\User::count();" 2>/dev/null | tail -1 || echo "0")
 if [ "$USER_COUNT" = "0" ]; then
     echo "Seeding database (first deploy)..."
     php artisan db:seed --force --no-interaction 2>/dev/null || true
 fi
+
+# ── Clear cache... ─────────────────────────────────────
+echo "Clearing cache..."
+php artisan optimize:clear || true
 
 echo "Setup complete. Starting PHP-FPM..."
 exec "$@"

@@ -490,29 +490,36 @@
             perspective: 800px;
         }
 
-        .v-logo {
+        .v-logo-wrapper {
             width: 90px;
             height: 90px;
-            filter: drop-shadow(0 0 16px rgba(201, 168, 76, 0.6));
             position: relative;
             z-index: 2;
         }
 
+        .v-logo {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            inset: 0;
+            filter: drop-shadow(0 0 16px rgba(201, 168, 76, 0.6));
+        }
+
         .v-path {
-            stroke-dasharray: var(--len);
-            stroke-dashoffset: var(--len);
+            stroke-dasharray: 100px;
+            stroke-dashoffset: 100px;
             animation: drawErase 5s ease-in-out infinite;
         }
 
         @keyframes drawErase {
             0%, 5% {
-                stroke-dashoffset: var(--len);
+                stroke-dashoffset: 100px;
             }
             35%, 75% {
-                stroke-dashoffset: 0;
+                stroke-dashoffset: 0px;
             }
             95%, 100% {
-                stroke-dashoffset: var(--len);
+                stroke-dashoffset: 100px;
             }
         }
 
@@ -720,46 +727,38 @@
                 <div class="splash-ring"></div>
                 <div class="splash-ring"></div>
             </div>
-            <svg viewBox="0 0 100 100" fill="none" class="v-logo">
-                <defs>
-                    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="#e8c96a" />
-                        <stop offset="50%" stop-color="#c9a84c" />
-                        <stop offset="100%" stop-color="#8a6f2e" />
-                    </linearGradient>
-
-                    <g id="vPaths">
-                        <path class="v-path" style="--len: 300;"
-                            d="M 20 40 C 5 30, 10 15, 25 20 C 40 25, 40 60, 45 85 C 48 90, 52 90, 55 85 C 65 50, 75 25, 85 25 C 100 25, 90 45, 80 40"
-                            stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-
-                        <path class="v-path" style="--len: 50;" d="M 52 65 Q 65 50, 62 30" stroke-width="2"
-                            stroke-linecap="round" />
-
-                        <path class="v-path" style="--len: 120;"
-                            d="M 62 30 C 50 25, 50 10, 55 5 C 58 15, 60 20, 62 30 M 62 30 C 58 20, 60 5, 65 0 C 70 5, 66 20, 62 30 M 62 30 C 74 25, 74 10, 69 5 C 66 15, 64 20, 62 30"
-                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-
-                        <path class="v-path" style="--len: 100;"
-                            d="M 35 70 Q 20 65, 15 75 Q 10 85, 25 90 Q 40 95, 48 85" stroke-width="2"
-                            stroke-linecap="round" />
-
-                        <path class="v-path" style="--len: 150;"
-                            d="M 32 30 A 28 28 0 0 0 32 85 M 34 35 A 22 22 0 0 0 34 80" stroke-width="1.5"
-                            stroke-linecap="round" />
-
-                        <path class="v-path" style="--len: 50;"
-                            d="M 20 57 L 15 57 M 23 45 L 18 42 M 23 70 L 18 73 M 28 35 L 24 30 M 28 80 L 24 85"
-                            stroke-width="1.5" stroke-linecap="round" />
-                    </g>
-                </defs>
-
+            <div class="v-logo-wrapper">
                 <!-- Base drawn paths -->
-                <use href="#vPaths" stroke="url(#goldGrad)" />
-
+                <svg viewBox="0 0 100 100" fill="none" class="v-logo v-logo-base">
+                    <defs>
+                        <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#e8c96a" />
+                            <stop offset="50%" stop-color="#c9a84c" />
+                            <stop offset="100%" stop-color="#8a6f2e" />
+                        </linearGradient>
+                    </defs>
+                    <g stroke="url(#goldGrad)">
+                        <path class="v-path" pathLength="100" d="M 20 40 C 5 30, 10 15, 25 20 C 40 25, 40 60, 45 85 C 48 90, 52 90, 55 85 C 65 50, 75 25, 85 25 C 100 25, 90 45, 80 40" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path class="v-path" pathLength="100" d="M 52 65 Q 65 50, 62 30" stroke-width="2" stroke-linecap="round" />
+                        <path class="v-path" pathLength="100" d="M 62 30 C 50 25, 50 10, 55 5 C 58 15, 60 20, 62 30 M 62 30 C 58 20, 60 5, 65 0 C 70 5, 66 20, 62 30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path class="v-path" pathLength="100" d="M 35 70 Q 20 65, 15 75 Q 10 85, 25 90 Q 40 95, 48 85" stroke-width="2" stroke-linecap="round" />
+                        <path class="v-path" pathLength="100" d="M 32 30 A 28 28 0 0 0 32 85 M 34 35 A 22 22 0 0 0 34 80" stroke-width="1.5" stroke-linecap="round" />
+                        <path class="v-path" pathLength="100" d="M 20 57 L 15 57 M 23 45 L 18 42 M 23 70 L 18 73 M 28 35 L 24 30 M 28 80 L 24 85" stroke-width="1.5" stroke-linecap="round" />
+                    </g>
+                </svg>
+                
                 <!-- Shining sweeping paths -->
-                <use href="#vPaths" class="shine-layer" />
-            </svg>
+                <svg viewBox="0 0 100 100" fill="none" class="v-logo shine-layer">
+                    <g stroke="#fff">
+                        <path class="v-path" pathLength="100" d="M 20 40 C 5 30, 10 15, 25 20 C 40 25, 40 60, 45 85 C 48 90, 52 90, 55 85 C 65 50, 75 25, 85 25 C 100 25, 90 45, 80 40" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path class="v-path" pathLength="100" d="M 52 65 Q 65 50, 62 30" stroke-width="2" stroke-linecap="round" />
+                        <path class="v-path" pathLength="100" d="M 62 30 C 50 25, 50 10, 55 5 C 58 15, 60 20, 62 30 M 62 30 C 58 20, 60 5, 65 0 C 70 5, 66 20, 62 30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path class="v-path" pathLength="100" d="M 35 70 Q 20 65, 15 75 Q 10 85, 25 90 Q 40 95, 48 85" stroke-width="2" stroke-linecap="round" />
+                        <path class="v-path" pathLength="100" d="M 32 30 A 28 28 0 0 0 32 85 M 34 35 A 22 22 0 0 0 34 80" stroke-width="1.5" stroke-linecap="round" />
+                        <path class="v-path" pathLength="100" d="M 20 57 L 15 57 M 23 45 L 18 42 M 23 70 L 18 73 M 28 35 L 24 30 M 28 80 L 24 85" stroke-width="1.5" stroke-linecap="round" />
+                    </g>
+                </svg>
+            </div>
         </div>
 
         <!-- Brand -->

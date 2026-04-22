@@ -21,6 +21,9 @@
     <link rel="alternate" hreflang="x-default"
         href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getDefaultLocale(), null, [], true) }}">
 
+    <!-- Favicon -->
+    <!-- <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}"> -->
+
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap"
@@ -99,13 +102,14 @@
             font-weight: 500;
             letter-spacing: 0.5px;
             color: var(--muted);
-            transition: color 0.2s;
+            transition: all 0.3s ease;
             text-transform: uppercase;
         }
 
         .nav a:hover,
         .nav a.active {
             color: var(--gold);
+            text-shadow: 0 0 12px rgba(201, 168, 76, 0.4);
         }
 
         .header-actions {
@@ -241,12 +245,13 @@
             border: 1px solid rgba(201, 168, 76, 0.1);
             border-radius: 12px;
             overflow: hidden;
-            transition: transform 0.3s, border-color 0.3s;
+            transition: all 0.4s ease;
         }
 
         .product-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--border);
+            transform: translateY(-8px);
+            border-color: var(--gold);
+            box-shadow: 0 12px 30px rgba(201, 168, 76, 0.15);
         }
 
         .product-card-img {
@@ -325,6 +330,8 @@
 
         .btn-gold:hover {
             background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(201, 168, 76, 0.25);
         }
 
         .btn-outline {
@@ -336,6 +343,8 @@
         .btn-outline:hover {
             background: var(--gold);
             color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(201, 168, 76, 0.25);
         }
 
         /* ── Footer ──────────────────────────────────── */
@@ -368,7 +377,8 @@
             font-weight: 600;
         }
 
-        .footer-col a {
+        .footer-col a,
+        .footer-col span {
             display: block;
             color: var(--muted);
             font-size: 14px;
@@ -376,7 +386,8 @@
             transition: color 0.2s;
         }
 
-        .footer-col a:hover {
+        .footer-col a:hover,
+        .footer-col span:hover {
             color: var(--text);
         }
 
@@ -470,35 +481,73 @@
 
         .splash-gem {
             position: relative;
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 800px;
         }
 
-        .splash-gem svg {
-            width: 80px;
-            height: 80px;
-            animation: gemRotate 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 18px rgba(201, 168, 76, 0.6));
+        .v-logo {
+            width: 90px;
+            height: 90px;
+            filter: drop-shadow(0 0 16px rgba(201, 168, 76, 0.6));
+            position: relative;
+            z-index: 2;
         }
 
-        @keyframes gemRotate {
+        .v-path {
+            stroke-dasharray: var(--len);
+            stroke-dashoffset: var(--len);
+            animation: drawErase 5s ease-in-out infinite;
+        }
 
-            0%,
-            100% {
-                transform: rotateY(0deg) scale(1);
+        @keyframes drawErase {
+            0%, 5% {
+                stroke-dashoffset: var(--len);
             }
-
-            25% {
-                transform: rotateY(20deg) scale(1.05);
+            35%, 75% {
+                stroke-dashoffset: 0;
             }
-
-            50% {
-                transform: rotateY(0deg) scale(1.02);
+            95%, 100% {
+                stroke-dashoffset: var(--len);
             }
+        }
 
+        .shine-layer {
+            stroke: #fff;
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, white 50%, transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0%, white 50%, transparent 100%);
+            -webkit-mask-size: 100px 100%;
+            mask-size: 100px 100%;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            animation: sweepMaskCss 5s ease-in-out infinite;
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8));
+        }
+
+        @keyframes sweepMaskCss {
+            0%, 34% {
+                opacity: 0;
+                -webkit-mask-position: -150px 0;
+                mask-position: -150px 0;
+            }
+            35% {
+                opacity: 1;
+                -webkit-mask-position: -150px 0;
+                mask-position: -150px 0;
+            }
             75% {
-                transform: rotateY(-20deg) scale(1.05);
+                opacity: 1;
+                -webkit-mask-position: 150px 0;
+                mask-position: 150px 0;
+            }
+            76%, 100% {
+                opacity: 0;
+                -webkit-mask-position: 150px 0;
+                mask-position: 150px 0;
             }
         }
 
@@ -671,32 +720,45 @@
                 <div class="splash-ring"></div>
                 <div class="splash-ring"></div>
             </div>
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 100 100" fill="none" class="v-logo">
                 <defs>
-                    <linearGradient id="gemGrad" x1="0" y1="0" x2="1" y2="1">
+                    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
                         <stop offset="0%" stop-color="#e8c96a" />
                         <stop offset="50%" stop-color="#c9a84c" />
                         <stop offset="100%" stop-color="#8a6f2e" />
                     </linearGradient>
-                    <linearGradient id="shimmer" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stop-color="rgba(255,255,255,0)" />
-                        <stop offset="50%" stop-color="rgba(255,255,255,0.3)" />
-                        <stop offset="100%" stop-color="rgba(255,255,255,0)" />
-                    </linearGradient>
+
+                    <g id="vPaths">
+                        <path class="v-path" style="--len: 300;"
+                            d="M 20 40 C 5 30, 10 15, 25 20 C 40 25, 40 60, 45 85 C 48 90, 52 90, 55 85 C 65 50, 75 25, 85 25 C 100 25, 90 45, 80 40"
+                            stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+
+                        <path class="v-path" style="--len: 50;" d="M 52 65 Q 65 50, 62 30" stroke-width="2"
+                            stroke-linecap="round" />
+
+                        <path class="v-path" style="--len: 120;"
+                            d="M 62 30 C 50 25, 50 10, 55 5 C 58 15, 60 20, 62 30 M 62 30 C 58 20, 60 5, 65 0 C 70 5, 66 20, 62 30 M 62 30 C 74 25, 74 10, 69 5 C 66 15, 64 20, 62 30"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+
+                        <path class="v-path" style="--len: 100;"
+                            d="M 35 70 Q 20 65, 15 75 Q 10 85, 25 90 Q 40 95, 48 85" stroke-width="2"
+                            stroke-linecap="round" />
+
+                        <path class="v-path" style="--len: 150;"
+                            d="M 32 30 A 28 28 0 0 0 32 85 M 34 35 A 22 22 0 0 0 34 80" stroke-width="1.5"
+                            stroke-linecap="round" />
+
+                        <path class="v-path" style="--len: 50;"
+                            d="M 20 57 L 15 57 M 23 45 L 18 42 M 23 70 L 18 73 M 28 35 L 24 30 M 28 80 L 24 85"
+                            stroke-width="1.5" stroke-linecap="round" />
+                    </g>
                 </defs>
-                <!-- Diamond shape -->
-                <polygon points="50,8 90,38 75,92 25,92 10,38" fill="url(#gemGrad)" stroke="#e8c96a" stroke-width="1" />
-                <!-- Facets -->
-                <polygon points="50,8 90,38 50,42" fill="rgba(255,255,255,0.15)" />
-                <polygon points="50,8 10,38 50,42" fill="rgba(0,0,0,0.2)" />
-                <polygon points="10,38 25,92 50,60" fill="rgba(255,255,255,0.08)" />
-                <polygon points="90,38 75,92 50,60" fill="rgba(0,0,0,0.15)" />
-                <polygon points="25,92 75,92 50,60" fill="rgba(255,255,255,0.05)" />
-                <!-- Top line detail -->
-                <line x1="50" y1="8" x2="50" y2="42" stroke="rgba(255,255,255,0.3)" stroke-width="0.5" />
-                <line x1="10" y1="38" x2="90" y2="38" stroke="rgba(255,255,255,0.2)" stroke-width="0.5" />
-                <!-- Shimmer overlay -->
-                <polygon points="50,8 90,38 75,92 25,92 10,38" fill="url(#shimmer)" opacity="0.5" />
+
+                <!-- Base drawn paths -->
+                <use href="#vPaths" stroke="url(#goldGrad)" />
+
+                <!-- Shining sweeping paths -->
+                <use href="#vPaths" class="shine-layer" />
             </svg>
         </div>
 
@@ -814,8 +876,8 @@
                 </div>
                 <div class="footer-col">
                     <h4>{{ __('footer.contact') }}</h4>
-                    <a href="#">chitho040903@gmail.com</a>
-                    <a href="#">{{ __('footer.location') }}</a>
+                    <a href="mailto:chitho040903@gmail.com">chitho040903@gmail.com</a>
+                    <span style="">{{ __('footer.location') }}</span>
                 </div>
             </div>
             <hr class="divider">

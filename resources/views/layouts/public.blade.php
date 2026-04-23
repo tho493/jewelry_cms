@@ -470,7 +470,7 @@
             justify-content: center;
             gap: 0;
             pointer-events: all;
-            transition: opacity 0.8s ease, visibility 0.8s ease;
+            transition: opacity 0.3s ease-out, visibility 0.3s;
         }
 
         #splash.hidden {
@@ -508,7 +508,7 @@
         .v-path {
             stroke-dasharray: 100px;
             stroke-dashoffset: 100px;
-            animation: drawOnce 1s ease-in-out forwards;
+            animation: drawOnce 0.6s ease-in-out forwards;
         }
 
         @keyframes drawOnce {
@@ -557,45 +557,6 @@
             }
         }
 
-        .splash-rings {
-            position: absolute;
-            inset: -20px;
-        }
-
-        .splash-ring {
-            position: absolute;
-            inset: 0;
-            border: 1px solid rgba(201, 168, 76, 0.25);
-            border-radius: 50%;
-            animation: ringPulse 2s ease-in-out infinite;
-        }
-
-        .splash-ring:nth-child(2) {
-            inset: -12px;
-            animation-delay: 0.4s;
-            border-color: rgba(201, 168, 76, 0.15);
-        }
-
-        .splash-ring:nth-child(3) {
-            inset: -24px;
-            animation-delay: 0.8s;
-            border-color: rgba(201, 168, 76, 0.08);
-        }
-
-        @keyframes ringPulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.6;
-            }
-
-            50% {
-                transform: scale(1.06);
-                opacity: 1;
-            }
-        }
-
         .splash-logo {
             font-family: 'Cormorant Garamond', serif;
             font-size: 36px;
@@ -603,9 +564,9 @@
             letter-spacing: 6px;
             color: var(--gold);
             text-transform: uppercase;
-            animation: logoReveal 1s ease forwards;
+            animation: logoReveal 0.4s ease forwards;
             opacity: 0;
-            animation-delay: 0.3s;
+            animation-delay: 0.15s;
         }
 
         @keyframes logoReveal {
@@ -628,9 +589,9 @@
             text-transform: uppercase;
             color: rgba(201, 168, 76, 0.5);
             margin-top: 10px;
-            animation: fadeUp 1s ease forwards;
+            animation: fadeUp 0.4s ease forwards;
             opacity: 0;
-            animation-delay: 0.7s;
+            animation-delay: 0.2s;
         }
 
         @keyframes fadeUp {
@@ -658,7 +619,7 @@
             position: absolute;
             inset: 0;
             background: linear-gradient(90deg, transparent, var(--gold), transparent);
-            animation: barSweep 1.6s ease-in-out infinite;
+            animation: barSweep 1s ease-in-out infinite;
         }
 
         @keyframes barSweep {
@@ -670,43 +631,6 @@
                 transform: translateX(100%);
             }
         }
-
-        .splash-particles {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .splash-particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--gold);
-            border-radius: 50%;
-            animation: particleFall linear infinite;
-            opacity: 0;
-        }
-
-        @keyframes particleFall {
-            0% {
-                transform: translateY(-10px) translateX(0);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 0.8;
-            }
-
-            90% {
-                opacity: 0.4;
-            }
-
-            100% {
-                transform: translateY(100vh) translateX(20px);
-                opacity: 0;
-            }
-        }
     </style>
 
     @stack('styles')
@@ -716,16 +640,8 @@
 
     <!-- Splash Screen -->
     <div id="splash">
-        <!-- Particles -->
-        <div class="splash-particles" id="splashParticles"></div>
-
         <!-- Diamond Icon -->
         <div class="splash-gem">
-            <div class="splash-rings">
-                <div class="splash-ring"></div>
-                <div class="splash-ring"></div>
-                <div class="splash-ring"></div>
-            </div>
             <div class="v-logo-wrapper">
                 <!-- Base drawn paths -->
                 <svg viewBox="0 0 100 100" fill="none" class="v-logo v-logo-base">
@@ -909,31 +825,14 @@
     @stack('scripts')
 
     <script>
-        // Generate gold particles
-        (function () {
-            var container = document.getElementById('splashParticles');
-            for (var i = 0; i < 28; i++) {
-                var p = document.createElement('div');
-                p.className = 'splash-particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.width = (Math.random() * 2 + 1) + 'px';
-                p.style.height = p.style.width;
-                p.style.animationDuration = (Math.random() * 6 + 4) + 's';
-                p.style.animationDelay = (Math.random() * 5) + 's';
-                p.style.opacity = Math.random() * 0.6 + 0.2;
-                container.appendChild(p);
-            }
-        })();
-
         // Hide splash after page is ready
         window.addEventListener('load', function () {
+            var splash = document.getElementById('splash');
+            splash.classList.add('hidden');
+
             setTimeout(function () {
-                var splash = document.getElementById('splash');
-                splash.classList.add('hidden');
-                setTimeout(function () {
-                    splash.style.display = 'none';
-                }, 850);
-            }, 400);
+                splash.style.display = 'none';
+            }, 500);
         });
     </script>
 </body>
